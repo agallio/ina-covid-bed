@@ -2,7 +2,7 @@ import axios from 'axios'
 import cheerio from 'cheerio'
 import { parseUrl } from 'query-string'
 
-const provincesWithCities = [
+export const provincesWithCities = [
   {
     province: { key: '11prop', value: 'aceh', name: 'Aceh' },
     cities: [

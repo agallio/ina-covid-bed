@@ -1,5 +1,6 @@
 import { Heading, Box, HStack, VStack, Text, Flex } from '@chakra-ui/react'
 import { PhoneIcon } from '@chakra-ui/icons'
+import { getRelativeLastUpdatedTime } from '../utils/HospitalHelper'
 
 function generateGoogleMapsLink(name) {
   return `https://www.google.com/maps/search/${name}`
@@ -7,6 +8,11 @@ function generateGoogleMapsLink(name) {
 
 export default function HospitalCard(props) {
   const { hospital } = props
+
+  const lastUpdatedTime = getRelativeLastUpdatedTime(
+    hospital.updated_at_minutes
+  )
+
   return (
     <Box
       w="100%"
@@ -32,6 +38,9 @@ export default function HospitalCard(props) {
               </Text>
             </HStack>
           )}
+          <Text pt="2" fontSize="xs" color="gray.600">
+            Diperbarui {lastUpdatedTime}
+          </Text>
         </VStack>
         <VStack align="center" ml="4" flex="1" justify="center">
           <Text size="sm">Tersedia:</Text>

@@ -19,6 +19,7 @@ specifiers:
   query-string: ^7.0.1
   react: 17.0.2
   react-dom: 17.0.2
+  swr: ^0.5.6
 
 dependencies:
   '@chakra-ui/icons': 1.0.13_react@17.0.2
@@ -33,6 +34,7 @@ dependencies:
   query-string: 7.0.1
   react: 17.0.2
   react-dom: 17.0.2_react@17.0.2
+  swr: 0.5.6_react@17.0.2
 
 devDependencies:
   eslint: 7.30.0
@@ -1936,6 +1938,11 @@ packages:
   /depd/1.1.2:
     resolution: {integrity: sha1-m81S4UwJd2PnSbJ0xDRu0uVgtak=}
     engines: {node: '>= 0.6'}
+    dev: false
+
+  /dequal/2.0.2:
+    resolution: {integrity: sha512-q9K8BlJVxK7hQYqa6XISGmBZbtQQWVXSrRrWreHC94rMt1QL/Impruc+7p2CYSYuVIUr+YCt6hjrs1kkdJRTug==}
+    engines: {node: '>=6'}
     dev: false
 
   /des.js/1.0.1:
@@ -4239,6 +4246,15 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       has-flag: 4.0.0
+    dev: false
+
+  /swr/0.5.6_react@17.0.2:
+    resolution: {integrity: sha512-Bmx3L4geMZjYT5S2Z6EE6/5Cx6v1Ka0LhqZKq8d6WL2eu9y6gHWz3dUzfIK/ymZVHVfwT/EweFXiYGgfifei3w==}
+    peerDependencies:
+      react: ^16.11.0 || ^17.0.0
+    dependencies:
+      dequal: 2.0.2
+      react: 17.0.2
     dev: false
 
   /table/6.7.1:

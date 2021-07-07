@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import {
-  Text,
   VStack,
   Box,
   Input,
@@ -12,52 +11,7 @@ import {
   InputLeftElement,
 } from '@chakra-ui/react'
 import { SearchIcon } from '@chakra-ui/icons'
-import { getProvinceDisplayName } from '../utils/ProvinceHelper'
-
-const PROVINCE = [
-  'aceh',
-  'sumatera_utara',
-  'sumatera_barat',
-  'riau',
-  'jambi',
-  'sumatera_selatan',
-  'bengkulu',
-  'lampung',
-  'kepulauan_bangka_belitung',
-  'kepulauan_riau',
-  'jakarta',
-  'jawa_barat',
-  'jawa_tengah',
-  'yogyakarta',
-  'jawa_timur',
-  'banten',
-  'bali',
-  'nusa_tenggara_barat',
-  'nusa_tenggara_timur',
-  'kalimantan_barat',
-  'kalimantan_tengah',
-  'kalimantan_selatan',
-  'kalimantan_timur',
-  'kalimantan_utara',
-  'sulawesi_utara',
-  'sulawesi_tengah',
-  'sulawesi_selatan',
-  'sulawesi_tenggara',
-  'gorontalo',
-  'sulawesi_barat',
-  'maluku',
-  'maluku_utara',
-  'papua_barat',
-  'papua',
-]
-
-const displayProvince = PROVINCE.map((p) => {
-  const displayName = getProvinceDisplayName(p)
-  return {
-    value: p,
-    displayName,
-  }
-})
+import useProvinceList from '../hooks/useProvinceList'
 
 function ProvinceItem(props) {
   const { province, onClick } = props
@@ -86,6 +40,7 @@ function ProvinceItem(props) {
 function SearchProvince() {
   const [inputProvince, setInputProvince] = useState('')
   const [filterResult, setFilterResult] = useState([])
+  const provinceList = useProvinceList()
   const router = useRouter()
 
   function handleChooseProvince(value) {
@@ -102,8 +57,10 @@ function SearchProvince() {
   function handleOnChange(e) {
     const inputValue = e.target.value
     if (inputValue) {
-      const filteredProvince = displayProvince
-        .filter((province) => province.value.includes(inputValue.toLowerCase()))
+      const filteredProvince = provinceList
+        .filter((province) =>
+          province.displayName.toLowerCase().includes(inputValue.toLowerCase())
+        )
         .slice(0, 5)
       setFilterResult(filteredProvince)
     } else {
@@ -127,6 +84,7 @@ function SearchProvince() {
           />
           <Input
             fontSize="lg"
+            isDisabled={provinceList.length < 1}
             placeholder="Masukkan nama provinsi"
             value={inputProvince}
             onKeyPress={handleKeyPress}

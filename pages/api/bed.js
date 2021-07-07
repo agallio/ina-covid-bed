@@ -767,6 +767,16 @@ export default async function getBedAvailability(req, res) {
     query: { prov },
   } = req;
 
+  if (!prov) {
+    res.status(400).json({
+      status: 400,
+      data: null,
+      error: `Bad request. Add 'prov' query string with Indonesia provinces.`,
+      province: provincesWithCities.map((pwc) => pwc.province.value),
+    });
+    return;
+  }
+
   const provinceWithCity = provincesWithCities.find(
     (pwc) => pwc.province.value === prov
   );

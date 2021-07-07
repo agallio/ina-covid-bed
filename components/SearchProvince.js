@@ -11,7 +11,7 @@ import {
   InputLeftElement,
 } from '@chakra-ui/react'
 import { SearchIcon } from '@chakra-ui/icons'
-import useProvinceList from '../hooks/useProvinceList'
+import { provinceList } from '../utils/ProvinceHelper'
 
 function ProvinceItem(props) {
   const { province, onClick } = props
@@ -32,7 +32,7 @@ function ProvinceItem(props) {
       }}
       _last={{ borderColor: 'transparent' }}
     >
-      {province.displayName}
+      {province.name}
     </ListItem>
   )
 }
@@ -40,7 +40,6 @@ function ProvinceItem(props) {
 function SearchProvince() {
   const [inputProvince, setInputProvince] = useState('')
   const [filterResult, setFilterResult] = useState([])
-  const provinceList = useProvinceList()
   const router = useRouter()
 
   function handleChooseProvince(value) {
@@ -59,7 +58,7 @@ function SearchProvince() {
     if (inputValue) {
       const filteredProvince = provinceList
         .filter((province) =>
-          province.displayName.toLowerCase().includes(inputValue.toLowerCase())
+          province.name.toLowerCase().includes(inputValue.toLowerCase())
         )
         .slice(0, 5)
       setFilterResult(filteredProvince)

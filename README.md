@@ -1,1 +1,1 @@
-# jogja-covid-bed
+# ina-covid-bed

@@ -1026,6 +1026,11 @@ export default async function getBedAvailability(req, res) {
 
     res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate')
 
+    if (newArr.length === 0) {
+      res.json({ status: 200, data: newArr, error: null, full_bed: true })
+      return
+    }
+
     return res.json({ status: 200, data: newArr, error: null })
   } catch (e) {
     console.log(e)

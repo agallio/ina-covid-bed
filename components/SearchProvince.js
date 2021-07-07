@@ -49,7 +49,7 @@ function SearchProvince() {
   function handleKeyPress(e) {
     if (e.code === 'Enter' && filterResult.length > 0) {
       const selectedProvince = filterResult[0]
-      handleChooseProvince(selectedProvince.value)
+      handleChooseProvince(selectedProvince.key)
     }
   }
 
@@ -58,7 +58,7 @@ function SearchProvince() {
     if (inputValue) {
       const filteredProvince = provinceList
         .filter((province) =>
-          province.name.toLowerCase().includes(inputValue.toLowerCase())
+          province.value.toLowerCase().includes(inputValue.toLowerCase())
         )
         .slice(0, 5)
       setFilterResult(filteredProvince)

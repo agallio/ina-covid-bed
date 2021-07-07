@@ -1,11 +1,17 @@
 import '../styles/globals.css'
-import { ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider, ColorModeProvider } from '@chakra-ui/react'
 import Footer from '../components/Footer'
 
 function MyApp({ Component, pageProps }) {
   return (
     <ChakraProvider resetCSS>
-      <Component {...pageProps} />
+      <ColorModeProvider
+        options={{
+          useSystemColorMode: false,
+        }}
+      >
+        <Component {...pageProps} />
+      </ColorModeProvider>
       <Footer />
     </ChakraProvider>
   )

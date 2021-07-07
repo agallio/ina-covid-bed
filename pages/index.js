@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import styles from '../styles/Home.module.css'
 import { Container, Flex } from '@chakra-ui/react'
 import SearchProvince from '../components/SearchProvince'
 

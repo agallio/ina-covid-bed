@@ -990,18 +990,25 @@ export default async function getBedAvailability(req, res) {
 
     hospitalNameArr.shift()
 
-    const filteredAvailableBed = hospitalNameArr
-      .map((hos, idx) => ({
-        name: hos,
-        address: address[idx],
-        available_bed: Number(bedAvailable[idx]) || 0,
-        bed_queue: bedQueue[idx],
-        hotline: hotline[idx],
-        bed_detail_link: bedDetailLink[idx].link,
-        hospital_code: bedDetailLink[idx].hospital_code,
-        updated_at_minutes: updatedAt[idx],
-      }))
-      .filter((hos) => hos.available_bed > 0)
+    const hospitalArray = hospitalNameArr.map((hos, idx) => ({
+      name: hos,
+      address: address[idx],
+      available_bed: Number(bedAvailable[idx]) || 0,
+      bed_queue: bedQueue[idx],
+      hotline: hotline[idx],
+      bed_detail_link: bedDetailLink[idx].link,
+      hospital_code: bedDetailLink[idx].hospital_code,
+      updated_at_minutes: updatedAt[idx],
+    }))
+
+    if (hospitalArray.length === 0) {
+      res.json({ status: 200, data: hospitalArray, error: null })
+      return
+    }
+
+    const filteredAvailableBed = hospitalArray.filter(
+      (hos) => hos.available_bed > 0
+    )
 
     const filteredAvailableBedWithLocation = filteredAvailableBed.map((hos) => {
       const url = `http://yankes.kemkes.go.id/app/siranap/rumah_sakit/${hos.hospital_code}`

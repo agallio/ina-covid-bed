@@ -763,9 +763,22 @@ export default async function getBedAvailability(req, res) {
     return;
   }
 
+  const {
+    query: { prov },
+  } = req;
+
   const provinceWithCity = provincesWithCities.find(
-    (pwc) => pwc.province.value === "yogyakarta"
+    (pwc) => pwc.province.value === prov
   );
+
+  if (!provinceWithCity) {
+    res.status(404).json({
+      status: 404,
+      data: null,
+      error: `Not found. Can't find any province with name '${prov}'`,
+    });
+    return;
+  }
 
   const provKey = provinceWithCity.province.key;
   const url = `http://yankes.kemkes.go.id/app/siranap/rumah_sakit?jenis=1&propinsi=${provKey}`;

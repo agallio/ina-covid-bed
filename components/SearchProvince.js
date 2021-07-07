@@ -58,7 +58,7 @@ function SearchProvince() {
     if (inputValue) {
       const filteredProvince = provinceList
         .filter((province) =>
-          province.value.toLowerCase().includes(inputValue.toLowerCase())
+          province.name.toLowerCase().includes(inputValue.toLowerCase())
         )
         .slice(0, 5)
       setFilterResult(filteredProvince)

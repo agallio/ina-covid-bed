@@ -49,7 +49,7 @@ function SearchProvince() {
   function handleKeyPress(e) {
     if (e.code === 'Enter' && filterResult.length > 0) {
       const selectedProvince = filterResult[0]
-      handleChooseProvince(selectedProvince.key)
+      handleChooseProvince(selectedProvince.value)
     }
   }
 

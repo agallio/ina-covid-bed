@@ -97,12 +97,25 @@ function SearchProvince() {
     )
   }
 
+  function toMapPage() {
+    router.push('/map')
+  }
+
   return (
     <VStack w="100%" spacing="8">
       <Heading as="h1" fontSize="3xl" textAlign="center">
         Ketersediaan Tempat Tidur Rumah Sakit
       </Heading>
       <Box w="100%" position="relative">
+        <Box w="full" textAlign="center" mb={4}>
+          <Button w={['full', 'auto']} onClick={toMapPage}>
+            Cari Menggunakan Peta
+            <span aria-label="Cari menggunakan peta" style={{ marginLeft: 6 }}>
+              🗺
+            </span>
+          </Button>
+        </Box>
+
         <HStack spacing="2">
           <InputGroup>
             <InputLeftElement

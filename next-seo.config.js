@@ -37,5 +37,8 @@ export default function SEO({
         href: '/favicon.ico',
       },
     ],
+    twitter: {
+      cardType: 'summary_large_image',
+    },
   }
 }

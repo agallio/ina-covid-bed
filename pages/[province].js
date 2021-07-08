@@ -1,6 +1,6 @@
 import React from 'react'
-import Head from 'next/head'
 import Link from 'next/link'
+import { NextSeo } from 'next-seo'
 import {
   Container,
   Heading,
@@ -13,6 +13,7 @@ import {
 import useHospitalDataByProvince from '@/hooks/useHospitalDataByProvince'
 import { getProvinceDisplayName } from '@/utils/ProvinceHelper'
 import HospitalCard from '@/components/HospitalCard'
+import SEO from 'next-seo.config'
 
 function ProvincePage(props) {
   const { province } = props
@@ -24,20 +25,12 @@ function ProvincePage(props) {
 
   return (
     <>
-      <Head>
-        <title>
-          {getProvinceDisplayName(province)} Kasur IGD COVID-19 Tersedia |
-          ina-covid-bed
-        </title>
-        <meta
-          name="description"
-          content={`${getProvinceDisplayName(
-            province
-          )} - Kasur IGD COVID-19 Tersedia | ina-covid-bed`}
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
+      <NextSeo
+        {...SEO({
+          pageTitle: getProvinceDisplayName(province),
+          pageDescription: getProvinceDisplayName(province),
+        })}
+      />
       <Container py="10">
         <Text color="blue.500" fontSize="sm">
           <Link href="/">

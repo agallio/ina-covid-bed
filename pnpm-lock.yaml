@@ -16,6 +16,7 @@ specifiers:
   isomorphic-unfetch: ^3.1.0
   mapbox-gl: ^2.3.1
   next: 11.0.1
+  next-seo: ^4.26.0
   prettier: ^2.3.2
   query-string: ^7.0.1
   react: 17.0.2
@@ -34,6 +35,7 @@ dependencies:
   isomorphic-unfetch: 3.1.0
   mapbox-gl: 2.3.1
   next: 11.0.1_react-dom@17.0.2+react@17.0.2
+  next-seo: 4.26.0_de3a444b12c9ebc463b1db22b5bac6fe
   query-string: 7.0.1
   react: 17.0.2
   react-dom: 17.0.2_react@17.0.2
@@ -3317,6 +3319,18 @@ packages:
   /natural-compare/1.4.0:
     resolution: {integrity: sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=}
     dev: true
+
+  /next-seo/4.26.0_de3a444b12c9ebc463b1db22b5bac6fe:
+    resolution: {integrity: sha512-5TqywQ3XAwqdmEU1AyNZjR7WdDKFTkDD8aBtgQelPvzBUEy8i0mTjtiw+09jhiHFNik6FqS8uPKCaYcY6jRgSQ==}
+    peerDependencies:
+      next: ^8.1.1-canary.54 || >=9.0.0
+      react: '>=16.0.0'
+      react-dom: '>=16.0.0'
+    dependencies:
+      next: 11.0.1_react-dom@17.0.2+react@17.0.2
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+    dev: false
 
   /next/11.0.1_react-dom@17.0.2+react@17.0.2:
     resolution: {integrity: sha512-yR7be7asNbvpVNpi6xxEg28wZ7Gqmj1nOt0sABH9qORmF3+pms2KZ7Cng33oK5nqPIzEEFJD0pp2PCe3/ueMIg==}

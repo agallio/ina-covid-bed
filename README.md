@@ -1,5 +1,7 @@
 # ina-covid-bed
 
+[![website preview](/public/readme.png)](https://bed.ina-covid.com)
+
 ## Prerequisites
 
 - Node > v14

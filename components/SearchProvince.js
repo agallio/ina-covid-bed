@@ -81,11 +81,19 @@ function SearchProvince() {
 
   function handleSearchGeo() {
     setSearchingGeo(true)
-    navigator.geolocation.getCurrentPosition((position) => {
-      const { latitude, longitude } = position.coords
-      const nearestProvince = getNearestProvince(latitude, longitude)
-      handleChooseProvince(nearestProvince, { lat: latitude, long: longitude })
-    })
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords
+        const nearestProvince = getNearestProvince(latitude, longitude)
+        handleChooseProvince(nearestProvince, {
+          lat: latitude,
+          long: longitude,
+        })
+      },
+      (err) => {
+        setSearchingGeo(false)
+      }
+    )
   }
 
   return (

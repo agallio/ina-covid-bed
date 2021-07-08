@@ -27,8 +27,20 @@ function ProvincePage(props) {
     <>
       <NextSeo
         {...SEO({
-          pageTitle: getProvinceDisplayName(province),
-          pageDescription: getProvinceDisplayName(province),
+          pageTitle: `${getProvinceDisplayName(
+            province
+          )} - Kasur IGD COVID-19 Tersedia`,
+          pageDescription:
+            'Daftar ketersediaan tempat tidur IGD di rumah sakit seluruh Indonesia.',
+          pageURL: `https://bed.ina-covid.com/${province}`,
+          images: [
+            {
+              url: 'https://bed.ina-covid.com/images/og-image-bed.png',
+              width: 1000,
+              height: 500,
+              alt: 'ina-covid-bed-image',
+            },
+          ],
         })}
       />
       <Container py="10">

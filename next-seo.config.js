@@ -1,14 +1,15 @@
-const WEB_DEFAULT_TITLE = 'Kasur IGD COVID-19 Tersedia | 🇮🇩 INA COVID BED';
+const WEB_DEFAULT_TITLE = '🇮🇩 INA COVID BED';
 const WEB_DEFAULT_DESCRIPTION = 'Informasi ketersediaan tempat tidur di Rumah Sakit di seluruh Provinsi di Indonesia.';
 const WEB_DEFAULT_URL = 'https://ina-covid-bed-tau.vercel.app/';
 
 export default ({
   pageTitle = '',
   pageDescription = '',
-  pageURL = WEB_DEFAULT_URL
+  pageURL = WEB_DEFAULT_URL,
+  images = []
 } = {}) => {
   const title = `${pageTitle ? `${pageTitle} - ` : ''}${WEB_DEFAULT_TITLE}`;
-  const description = `${pageDescription ? `${pageDescription} - ` : ''}${WEB_DEFAULT_DESCRIPTION}`;
+  const description = pageDescription || WEB_DEFAULT_DESCRIPTION;
 
   return {
     title,
@@ -16,7 +17,7 @@ export default ({
     openGraph: {
       title,
       description,
-      images: [],
+      images,
       type: 'website',
       locale: 'id_ID',
       url: pageURL,

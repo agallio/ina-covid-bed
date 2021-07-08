@@ -4,6 +4,8 @@ import Head from 'next/head'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import 'react-spring-bottom-sheet/dist/style.css'
 import { BottomSheet } from 'react-spring-bottom-sheet'
+import { NextSeo } from 'next-seo'
+import SEO from 'next-seo.config'
 
 import mapboxgl from '!mapbox-gl'
 import styles from '@/styles/Map.module.css'
@@ -126,14 +128,22 @@ export default function Map() {
 
   return (
     <div position="relative">
-      <Head>
-        <title>
-          {city.label} - Peta Ketersediaan Tempat Tidur | ina-covid-bed
-        </title>
-        <meta name="description" content="Peta | ina-covid-bed" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
+      <NextSeo
+        {...SEO({
+          pageTitle: `${city.label} - Peta Ketersediaan Tempat Tidur`,
+          pageDescription:
+            'Peta ketersediaan tempat tidur IGD di rumah sakit seluruh Indonesia.',
+          pageURL: 'https://bed.ina-covid.com/map',
+          images: [
+            {
+              url: 'https://bed.ina-covid.com/images/og-image-map.png',
+              width: 1000,
+              height: 500,
+              alt: 'ina-covid-bed-image',
+            },
+          ],
+        })}
+      />
       <div className={styles.mapboxWrapper}>
         <div ref={mapContainer} className={styles.mapbox} />
 

@@ -51,7 +51,11 @@ function ProvincePage(props) {
         <VStack align="start" spacing="4">
           {!isLoading ? (
             hospitalList.map((hospital, idx) => (
-              <HospitalCard key={hospital.hospital_code} hospital={hospital} />
+              <HospitalCard
+                key={hospital.hospital_code}
+                hospital={hospital}
+                currentCoordinate={geo}
+              />
             ))
           ) : (
             <Box w="100%" textAlign="center">

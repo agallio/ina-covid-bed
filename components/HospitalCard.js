@@ -1,5 +1,6 @@
 import { Heading, Box, HStack, VStack, Text, Flex } from '@chakra-ui/react'
 import { PhoneIcon } from '@chakra-ui/icons'
+import { point, distance } from '@turf/turf'
 
 import { getRelativeLastUpdatedTime } from '@/utils/HospitalHelper'
 
@@ -7,12 +8,32 @@ function generateGoogleMapsLink(name) {
   return `https://www.google.com/maps/search/${name}`
 }
 
+function calculateDistance(from, to, unit) {
+  const satuan = unit ? unit : 'kilometers'
+  try {
+    return distance(from, to, {
+      units: satuan,
+    })
+  } catch (e) {
+    console.log(e)
+    return 0
+  }
+}
+
 export default function HospitalCard(props) {
-  const { hospital } = props
+  const { hospital, currentCoordinate } = props
 
   const lastUpdatedTime = getRelativeLastUpdatedTime(
     hospital.updated_at_minutes
   )
+  const hospitalCoordinate = point([
+    parseFloat(hospital.lat.replace(/ /g, '')),
+    parseFloat(hospital.lon.replace(/ /g, '')),
+  ])
+  const userCoordinate = point([
+    parseFloat(currentCoordinate.lat.replace(/ /g, '')),
+    parseFloat(currentCoordinate.lon.replace(/ /g, '')),
+  ])
 
   return (
     <Box
@@ -39,6 +60,11 @@ export default function HospitalCard(props) {
               </Text>
             </HStack>
           )}
+          <Text pt="2" fontSize="xs" color="gray.600">
+            Jarak menuju RS{' '}
+            {calculateDistance(userCoordinate, hospitalCoordinate).toFixed(2)}{' '}
+            km
+          </Text>
           <Text pt="2" fontSize="xs" color="gray.600">
             Diperbarui {lastUpdatedTime}
           </Text>

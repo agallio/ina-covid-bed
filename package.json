@@ -19,6 +19,7 @@
     "@chakra-ui/react": "^1.6.4",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
+    "@turf/turf": "^6.4.0",
     "axios": "^0.21.1",
     "cheerio": "^1.0.0-rc.10",
     "framer-motion": "^4",

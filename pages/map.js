@@ -189,19 +189,26 @@ export default function Map() {
             }}
           />
         </div>
-        <div className={styles.floatingTopRightContainer}>
+
+        <div className={styles.floatingContainer}>
           <button className={styles.locationButton} onClick={handleSearchGeo}>
             📍
           </button>
-        </div>
-
-        <div className={styles.floatingContainer}>
-          <p onClick={() => setPopupHospitalVisibility(true)}>
-            Jumlah Rumah Sakit: {isLoading ? <Spinner /> : hospitalList?.length}{' '}
-            <span style={{ color: '#F87A26', cursor: 'pointer' }}>
-              (Daftar Rumah Sakit)
-            </span>
-          </p>
+          <div
+            className={styles.hospitalInfoWrapper}
+            onClick={(e) => {
+              e.preventDefault()
+              setPopupHospitalVisibility(true)
+            }}
+          >
+            <p onClick={() => setPopupHospitalVisibility(true)}>
+              Jumlah Rumah Sakit:{' '}
+              {isLoading ? <Spinner /> : hospitalList?.length}{' '}
+              <span style={{ color: '#F87A26', cursor: 'pointer' }}>
+                (Daftar Rumah Sakit)
+              </span>
+            </p>
+          </div>
         </div>
       </div>
 

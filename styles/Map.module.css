@@ -10,15 +10,18 @@
   width: 100%;
 }
 
-.floatingContainer {
-  position: absolute;
-  background: white;
-  bottom: 1rem;
-  left: 1rem;
-  right: 1rem;
+.hospitalInfoWrapper {
   border-radius: 8px;
   padding: 1rem;
   box-shadow: 0 2px 8px 0 rgb(48 49 53 / 16%);
+  background: white;
+}
+
+.floatingContainer {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
 }
 .topWrapper {
   display: column;
@@ -30,6 +33,9 @@
   padding: 1rem;
   box-shadow: 0 2px 8px 0 rgb(48 49 53 / 16%);
   border-radius: 8px;
+  position: absolute;
+  right: 0;
+  bottom: 4rem;
 }
 .floatingTopLeftContainer {
   position: absolute;

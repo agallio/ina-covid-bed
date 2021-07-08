@@ -47,11 +47,15 @@ function SearchProvince() {
   const [filterResult, setFilterResult] = useState([])
   const router = useRouter()
 
-  function handleChooseProvince(value, geo) {
+  function handleChooseProvince(value, geo, accuracy) {
     let nextPage = `/${value}`
 
     if (geo) {
       nextPage += `?geo=${geo.lat},${geo.long}`
+    }
+
+    if (geo && accuracy) {
+      nextPage += `&accuracy=${accuracy}`
     }
 
     router.push(nextPage)
@@ -84,16 +88,21 @@ function SearchProvince() {
     setSearchingGeo(true)
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const { latitude, longitude } = position.coords
+        const { latitude, longitude, accuracy } = position.coords
         const nearestProvince = getNearestProvince(latitude, longitude)
-        handleChooseProvince(nearestProvince, {
-          lat: latitude,
-          long: longitude,
-        })
+        handleChooseProvince(
+          nearestProvince,
+          {
+            lat: latitude,
+            long: longitude,
+          },
+          accuracy
+        )
       },
       (err) => {
         setSearchingGeo(false)
-      }
+      },
+      { maximumAge: 0, timeout: 5000, enableHighAccuracy: true }
     )
   }
 

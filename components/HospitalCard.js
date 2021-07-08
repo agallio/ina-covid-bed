@@ -21,7 +21,7 @@ function calculateDistance(from, to, unit) {
 }
 
 export default function HospitalCard(props) {
-  const { hospital, currentCoordinate } = props
+  const { hospital, currentCoordinate, accuracyCoordinate } = props
 
   const lastUpdatedTime = getRelativeLastUpdatedTime(
     hospital.updated_at_minutes
@@ -63,7 +63,7 @@ export default function HospitalCard(props) {
           <Text pt="2" fontSize="xs" color="gray.600">
             Jarak menuju RS{' '}
             {calculateDistance(userCoordinate, hospitalCoordinate).toFixed(2)}{' '}
-            km
+            km (akurasi {accuracyCoordinate.toFixed(0)} km)
           </Text>
           <Text pt="2" fontSize="xs" color="gray.600">
             Diperbarui {lastUpdatedTime}

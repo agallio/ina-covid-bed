@@ -18,6 +18,7 @@ function ProvincePage(props) {
   const { province } = props
   const [lat, lon] = (props.geo ?? '').split(',')
   const geo = props.geo ? { lat, lon } : null
+  const accuracy = props.accuracy ? props.accuracy / 2 / 1000 : 0
   const { bedFull, hospitalList } = useHospitalDataByProvince(province, geo)
 
   const isLoading = !Boolean(hospitalList)
@@ -55,6 +56,7 @@ function ProvincePage(props) {
                 key={hospital.hospital_code}
                 hospital={hospital}
                 currentCoordinate={geo}
+                accuracyCoordinate={accuracy}
               />
             ))
           ) : (
@@ -87,8 +89,8 @@ function ProvincePage(props) {
 }
 
 ProvincePage.getInitialProps = async ({ query }) => {
-  const { province, geo } = query
-  return { province, geo }
+  const { province, geo, accuracy } = query
+  return { province, geo, accuracy }
 }
 
 export default ProvincePage

@@ -1,4 +1,12 @@
-import { Heading, Box, HStack, VStack, Text, Flex } from '@chakra-ui/react'
+import {
+  Heading,
+  Box,
+  HStack,
+  VStack,
+  Text,
+  Flex,
+  useColorMode,
+} from '@chakra-ui/react'
 import { PhoneIcon } from '@chakra-ui/icons'
 
 import { getRelativeLastUpdatedTime } from '@/utils/HospitalHelper'
@@ -9,7 +17,8 @@ function generateGoogleMapsLink(name) {
 
 export default function HospitalCard(props) {
   const { hospital } = props
-
+  const { colorMode } = useColorMode()
+  const isDarkMode = colorMode === 'dark'
   const lastUpdatedTime = getRelativeLastUpdatedTime(
     hospital.updated_at_minutes
   )
@@ -28,7 +37,7 @@ export default function HospitalCard(props) {
           <Heading as="h2" size="sm">
             {hospital.name}
           </Heading>
-          <Text fontSize="sm" color="gray.600">
+          <Text fontSize="sm" color={isDarkMode ? 'gray.200' : 'gray.600'}>
             {hospital.address}
           </Text>
           {hospital.hotline && (
@@ -39,7 +48,11 @@ export default function HospitalCard(props) {
               </Text>
             </HStack>
           )}
-          <Text pt="2" fontSize="xs" color="gray.600">
+          <Text
+            pt="2"
+            fontSize="xs"
+            color={isDarkMode ? 'gray.300' : 'gray.600'}
+          >
             Diperbarui {lastUpdatedTime}
           </Text>
         </VStack>

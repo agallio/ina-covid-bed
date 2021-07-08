@@ -1,6 +1,6 @@
 const WEB_DEFAULT_TITLE = '🇮🇩 INA COVID BED';
 const WEB_DEFAULT_DESCRIPTION = 'Informasi ketersediaan tempat tidur di Rumah Sakit di seluruh Provinsi di Indonesia.';
-const WEB_DEFAULT_URL = 'https://ina-covid-bed-tau.vercel.app/';
+const WEB_DEFAULT_URL = 'https://bed.ina-covid.com/';
 
 export default ({
   pageTitle = '',

@@ -23,10 +23,12 @@
     "cheerio": "^1.0.0-rc.10",
     "framer-motion": "^4",
     "isomorphic-unfetch": "^3.1.0",
+    "mapbox-gl": "^2.3.1",
     "next": "11.0.1",
     "query-string": "^7.0.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-spring-bottom-sheet": "^3.4.0",
     "swr": "^0.5.6"
   },
   "devDependencies": {

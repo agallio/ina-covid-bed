@@ -1,0 +1,25 @@
+
+.mapboxWrapper {
+  position: relative;
+  width: 100vw;
+  height: calc(100vh - 70px); /* 69px = footer heigh */
+  overflow: hidden;
+}
+
+.mapbox {
+  height: 100%;
+  width: 100%;
+}
+
+.floatingContainer {
+  position: absolute;
+  height: 100px;
+  background: white;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: 0 2px 8px 0 rgb(48 49 53 / 16%);
+}
+

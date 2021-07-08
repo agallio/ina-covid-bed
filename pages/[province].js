@@ -1,17 +1,20 @@
 import React from 'react'
 import Link from 'next/link'
+import { Link as ChakraLink } from '@chakra-ui/react'
 import { NextSeo } from 'next-seo'
 import {
   Container,
   Heading,
   Box,
   VStack,
+  HStack,
   Text,
   Spinner,
 } from '@chakra-ui/react'
 
 import useHospitalDataByProvince from '@/hooks/useHospitalDataByProvince'
 import { getProvinceDisplayName } from '@/utils/ProvinceHelper'
+import { getNearestProvinces } from '@/utils/LocationHelper'
 import HospitalCard from '@/components/HospitalCard'
 import SEO from 'next-seo.config'
 
@@ -20,6 +23,14 @@ function ProvincePage(props) {
   const [lat, lon] = (props.geo ?? '').split(',')
   const geo = props.geo ? { lat, lon } : null
   const { bedFull, hospitalList } = useHospitalDataByProvince(province, geo)
+  const isShowAlternativeProvince = !!geo
+
+  let alternativeProvinces
+  if (isShowAlternativeProvince) {
+    alternativeProvinces = getNearestProvinces(lat, lon)
+      .slice(0, 3)
+      .filter((p) => p.value !== province)
+  }
 
   const isLoading = !Boolean(hospitalList)
 
@@ -45,13 +56,36 @@ function ProvincePage(props) {
       />
       <Container py="10">
         <Text color="blue.500" fontSize="sm">
-          <Link href="/">
-            <a>‹ Ganti Provinsi</a>
+          <Link href="/" passHref>
+            <ChakraLink>‹ Ganti Provinsi</ChakraLink>
           </Link>
         </Text>
         <VStack spacing="1" my="12">
           <Text>Ketersediaan tempat tidur rumah sakit</Text>
-          <Heading m="4">{getProvinceDisplayName(province)}</Heading>
+          <Heading m="4" textAlign="center">
+            {getProvinceDisplayName(province)}
+          </Heading>
+          {isShowAlternativeProvince && (
+            <HStack
+              fontSize="xs"
+              w="100%"
+              spacing="4"
+              justify="center"
+              color="gray.500"
+            >
+              <Text>Provinsi sekitar:</Text>
+              {alternativeProvinces.map((alternative) => (
+                <Text key={alternative.value} color="blue.500">
+                  <Link
+                    passHref
+                    href={`/${alternative.value}?geo=${lat},${lon}`}
+                  >
+                    <ChakraLink>{alternative.name}</ChakraLink>
+                  </Link>
+                </Text>
+              ))}
+            </HStack>
+          )}
         </VStack>
         <VStack align="start" spacing="4">
           {!isLoading ? (

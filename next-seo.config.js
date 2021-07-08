@@ -34,7 +34,7 @@ export default ({
     additionalLinkTags: [
       {
         rel: 'icon',
-        href: '/favicon.ico',
+        href: 'https://fav.farm/🛏',
       },
     ]
   };

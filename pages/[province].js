@@ -35,7 +35,7 @@ function ProvincePage(props) {
           pageURL: `https://bed.ina-covid.com/${province}`,
           images: [
             {
-              url: 'https://bed.ina-covid.com/images/og-image-bed.png',
+              url: 'http://bed.ina-covid.com/images/og-image-bed.png',
               width: 1000,
               height: 500,
               alt: 'ina-covid-bed-image',

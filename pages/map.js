@@ -136,7 +136,7 @@ export default function Map() {
           pageURL: 'https://bed.ina-covid.com/map',
           images: [
             {
-              url: 'https://bed.ina-covid.com/images/og-image-map.png',
+              url: 'http://bed.ina-covid.com/images/og-image-map.png',
               width: 1000,
               height: 500,
               alt: 'ina-covid-bed-image',

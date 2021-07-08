@@ -110,7 +110,11 @@ function SearchProvince() {
               onChange={handleOnChange}
             />
           </InputGroup>
-          <Button disabled={isSearchingGeo} onClick={handleSearchGeo}>
+          <Button
+            disabled={isSearchingGeo}
+            onClick={handleSearchGeo}
+            aria-label="Cari provinsi terdekat"
+          >
             📍
           </Button>
         </HStack>

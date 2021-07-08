@@ -34,8 +34,6 @@ export default function useHospitalDataByProvince(province, geo) {
         .sort((a, b) => {
           return a.distance > b.distance ? 1 : -1
         })
-
-      console.log(hospitalList)
     }
   }
 

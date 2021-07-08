@@ -1,5 +1,6 @@
 import useSWR from 'swr'
-import { getDistanceFromLatLonInKm } from '../utils/LocationHelper'
+
+import { getDistanceFromLatLonInKm } from '@/utils/LocationHelper'
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json())
 

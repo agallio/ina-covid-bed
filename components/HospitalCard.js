@@ -1,6 +1,7 @@
 import { Heading, Box, HStack, VStack, Text, Flex } from '@chakra-ui/react'
 import { PhoneIcon } from '@chakra-ui/icons'
-import { getRelativeLastUpdatedTime } from '../utils/HospitalHelper'
+
+import { getRelativeLastUpdatedTime } from '@/utils/HospitalHelper'
 
 function generateGoogleMapsLink(name) {
   return `https://www.google.com/maps/search/${name}`

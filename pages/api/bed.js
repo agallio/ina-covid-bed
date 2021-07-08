@@ -2,7 +2,7 @@ import axios from 'axios'
 import cheerio from 'cheerio'
 import { parseUrl } from 'query-string'
 
-import { provincesWithCities } from '../../utils/constants'
+import { provincesWithCities } from '@/utils/constants'
 
 export default async function getBedAvailability(req, res) {
   if (req.method !== 'GET') {

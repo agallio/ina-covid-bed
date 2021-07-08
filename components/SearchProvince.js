@@ -13,8 +13,9 @@ import {
   HStack,
 } from '@chakra-ui/react'
 import { SearchIcon } from '@chakra-ui/icons'
-import { provinceList } from '../utils/ProvinceHelper'
-import { getNearestProvince } from '../utils/LocationHelper'
+
+import { provinceList } from '@/utils/ProvinceHelper'
+import { getNearestProvince } from '@/utils/LocationHelper'
 
 function ProvinceItem(props) {
   const { province, onClick } = props

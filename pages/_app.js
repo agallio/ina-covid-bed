@@ -1,6 +1,7 @@
-import '../styles/globals.css'
+import '@/styles/globals.css'
 import { ChakraProvider, ColorModeProvider } from '@chakra-ui/react'
-import Footer from '../components/Footer'
+
+import Footer from '@/components/Footer'
 
 function MyApp({ Component, pageProps }) {
   return (

@@ -1,4 +1,4 @@
-import { provincesWithCities } from '../pages/api/bed'
+import { provincesWithCities } from './constants'
 
 export const provinceList = provincesWithCities.map((row) => ({
   value: row.province.value,

@@ -9,9 +9,12 @@ import {
   Heading,
   InputGroup,
   InputLeftElement,
+  Button,
+  HStack,
 } from '@chakra-ui/react'
 import { SearchIcon } from '@chakra-ui/icons'
 import { provinceList } from '../utils/ProvinceHelper'
+import { getNearestProvince } from '../utils/LocationHelper'
 
 function ProvinceItem(props) {
   const { province, onClick } = props
@@ -39,11 +42,18 @@ function ProvinceItem(props) {
 
 function SearchProvince() {
   const [inputProvince, setInputProvince] = useState('')
+  const [isSearchingGeo, setSearchingGeo] = useState(false)
   const [filterResult, setFilterResult] = useState([])
   const router = useRouter()
 
-  function handleChooseProvince(value) {
-    router.push(`/${value}`)
+  function handleChooseProvince(value, geo) {
+    let nextPage = `/${value}`
+
+    if (geo) {
+      nextPage += `?geo=${geo.lat},${geo.long}`
+    }
+
+    router.push(nextPage)
   }
 
   function handleKeyPress(e) {
@@ -69,27 +79,41 @@ function SearchProvince() {
     setInputProvince(inputValue)
   }
 
+  function handleSearchGeo() {
+    setSearchingGeo(true)
+    navigator.geolocation.getCurrentPosition((position) => {
+      const { latitude, longitude } = position.coords
+      const nearestProvince = getNearestProvince(latitude, longitude)
+      handleChooseProvince(nearestProvince, { lat: latitude, long: longitude })
+    })
+  }
+
   return (
     <VStack w="100%" spacing="8">
       <Heading as="h1" fontSize="3xl" textAlign="center">
         Ketersediaan Tempat Tidur Rumah Sakit
       </Heading>
       <Box w="100%" position="relative">
-        <InputGroup>
-          <InputLeftElement
-            pointerEvents="none"
-            // eslint-disable-next-line react/no-children-prop
-            children={<SearchIcon color="gray.300" />}
-          />
-          <Input
-            fontSize="lg"
-            isDisabled={provinceList.length < 1}
-            placeholder="Masukkan nama provinsi"
-            value={inputProvince}
-            onKeyPress={handleKeyPress}
-            onChange={handleOnChange}
-          />
-        </InputGroup>
+        <HStack spacing="2">
+          <InputGroup>
+            <InputLeftElement
+              pointerEvents="none"
+              // eslint-disable-next-line react/no-children-prop
+              children={<SearchIcon color="gray.300" />}
+            />
+            <Input
+              fontSize="lg"
+              isDisabled={provinceList.length < 1 || isSearchingGeo}
+              placeholder="Masukkan nama provinsi"
+              value={inputProvince}
+              onKeyPress={handleKeyPress}
+              onChange={handleOnChange}
+            />
+          </InputGroup>
+          <Button disabled={isSearchingGeo} onClick={handleSearchGeo}>
+            📍
+          </Button>
+        </HStack>
 
         <Box
           w="100%"

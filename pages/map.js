@@ -6,19 +6,20 @@ import 'react-spring-bottom-sheet/dist/style.css'
 import { BottomSheet } from 'react-spring-bottom-sheet'
 
 import mapboxgl from '!mapbox-gl'
-import useHospitalDataByProvince from '../hooks/useHospitalDataByProvince'
-import styles from '../styles/Map.module.css'
+import styles from '@/styles/Map.module.css'
 
-import { provincesWithCities } from './api/bed'
+import useHospitalDataByProvince from '@/hooks/useHospitalDataByProvince'
+
+import { provincesWithCities } from '@/utils/constants'
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX
 
 export default function Map() {
   const mapContainer = useRef(null)
   const map = useRef(null)
-  const [lng, setLng] = useState(115.212631)
-  const [lat, setLat] = useState(-8.670458)
-  const [zoom, setZoom] = useState(9)
+  const [lng] = useState(115.212631)
+  const [lat] = useState(-8.670458)
+  const [zoom] = useState(9)
 
   const [city, setCity] = useState({ value: 'bali', label: 'Bali' })
   const { hospitalList } = useHospitalDataByProvince(city.value)

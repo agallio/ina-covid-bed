@@ -9,13 +9,16 @@ import {
   Text,
   Spinner,
 } from '@chakra-ui/react'
-import useHospitalDataByProvince from '../hooks/useHospitalDataByProvince'
-import { getProvinceDisplayName } from '../utils/ProvinceHelper'
-import HospitalCard from '../components/HospitalCard'
+
+import useHospitalDataByProvince from '@/hooks/useHospitalDataByProvince'
+import { getProvinceDisplayName } from '@/utils/ProvinceHelper'
+import HospitalCard from '@/components/HospitalCard'
 
 function ProvincePage(props) {
   const { province } = props
-  const { bedFull, hospitalList } = useHospitalDataByProvince(province)
+  const [lat, lon] = (props.geo ?? '').split(',')
+  const geo = props.geo ? { lat, lon } : null
+  const { bedFull, hospitalList } = useHospitalDataByProvince(province, geo)
 
   const isLoading = !Boolean(hospitalList)
 
@@ -80,8 +83,8 @@ function ProvincePage(props) {
 }
 
 ProvincePage.getInitialProps = async ({ query }) => {
-  const { province } = query
-  return { province }
+  const { province, geo } = query
+  return { province, geo }
 }
 
 export default ProvincePage

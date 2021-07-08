@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import { Container, Flex } from '@chakra-ui/react'
-import SearchProvince from '../components/SearchProvince'
+
+import SearchProvince from '@/components/SearchProvince'
 
 export default function Home() {
   return (

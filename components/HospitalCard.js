@@ -9,7 +9,7 @@ function generateGoogleMapsLink(name) {
 }
 
 function calculateDistance(from, to, unit) {
-  const satuan = unit ? unit : 'kilometers'
+  const satuan = unit ?? 'kilometers'
   try {
     return distance(from, to, {
       units: satuan,

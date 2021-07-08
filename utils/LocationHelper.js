@@ -1,12 +1,11 @@
 import { provincesWithCities } from './constants'
 
 /**
- *
  * @param {number} lat
  * @param {number} lon
- * @returns {string}
+ * @returns {Array}
  */
-export function getNearestProvince(lat, lon) {
+export function getNearestProvinces(lat, lon) {
   const provinceDistanceMap = provincesWithCities
     .map((p) => {
       const distance = getDistanceFromLatLonInKm(
@@ -18,6 +17,7 @@ export function getNearestProvince(lat, lon) {
       return {
         distance: !p.province.lat ? Infinity : distance,
         value: p.province.value,
+        name: p.province.name,
       }
       // map first so we don't mutate original array
     })
@@ -26,7 +26,17 @@ export function getNearestProvince(lat, lon) {
       return a.distance > b.distance ? 1 : -1
     })
 
-  return provinceDistanceMap[0].value
+  return provinceDistanceMap
+}
+
+/**
+ * @param {number} lat
+ * @param {number} lon
+ * @returns {string}
+ */
+export function getNearestProvince(lat, lon) {
+  const nearestProvinces = getNearestProvinces(lat, lon)
+  return nearestProvinces[0].value
 }
 
 function deg2rad(deg) {

@@ -27,12 +27,12 @@ export default function HospitalCard(props) {
     hospital.updated_at_minutes
   )
   const hospitalCoordinate = point([
-    parseFloat(hospital.lat.replace(/ /g, '')),
     parseFloat(hospital.lon.replace(/ /g, '')),
+    parseFloat(hospital.lat.replace(/ /g, '')),
   ])
   const userCoordinate = point([
-    parseFloat(currentCoordinate.lat.replace(/ /g, '')),
     parseFloat(currentCoordinate.lon.replace(/ /g, '')),
+    parseFloat(currentCoordinate.lat.replace(/ /g, '')),
   ])
 
   return (

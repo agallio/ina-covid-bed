@@ -8,6 +8,7 @@ const Navbar = () => {
       <IconButton
         onClick={toggleColorMode}
         icon={colorMode === 'light' ? <SunIcon /> : <MoonIcon />}
+        aria-label="toggle color mode"
       />
     </Box>
   )

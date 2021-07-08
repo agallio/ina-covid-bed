@@ -11,7 +11,9 @@ const Navbar = () => {
         bg={bgButton}
         _hover={{
           bg: bgButton,
-          opacity: 0.9,
+        }}
+        _active={{
+          bg: bgButton,
         }}
         onClick={toggleColorMode}
         icon={isDarkMode ? <MoonIcon /> : <SunIcon />}

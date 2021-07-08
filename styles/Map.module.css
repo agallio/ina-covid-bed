@@ -1,4 +1,3 @@
-
 .mapboxWrapper {
   position: relative;
   width: 100vw;
@@ -13,13 +12,45 @@
 
 .floatingContainer {
   position: absolute;
-  height: 100px;
   background: white;
   bottom: 1rem;
   left: 1rem;
   right: 1rem;
-  border-radius: 1rem;
+  border-radius: 8px;
   padding: 1rem;
   box-shadow: 0 2px 8px 0 rgb(48 49 53 / 16%);
 }
+.topWrapper {
+  display: column;
+  flex-direction: row;
+}
 
+.locationButton {
+  background: white;
+  padding: 1rem;
+  box-shadow: 0 2px 8px 0 rgb(48 49 53 / 16%);
+  border-radius: 8px;
+}
+.floatingTopLeftContainer {
+  position: absolute;
+  background: white;
+  padding: 1rem;
+  box-shadow: 0 2px 8px 0 rgb(48 49 53 / 16%);
+  border-radius: 8px;
+  top: 1rem;
+  left: 1rem;
+  right: 1rem;
+}
+
+.floatingTopRightContainer {
+  position: absolute;
+
+  top: 1rem;
+  right: 1rem;
+}
+
+@media only screen and (min-width: 600px) {
+  .floatingTopLeftContainer {
+    width: 400px;
+  }
+}

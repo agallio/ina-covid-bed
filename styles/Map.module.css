@@ -22,6 +22,9 @@
   bottom: 1rem;
   left: 1rem;
   right: 1rem;
+
+  display: flex;
+  flex-direction: column;
 }
 .topWrapper {
   display: column;
@@ -29,13 +32,13 @@
 }
 
 .locationButton {
+  align-self: flex-end;
+  justify-self: flex-end;
   background: white;
   padding: 1rem;
   box-shadow: 0 2px 8px 0 rgb(48 49 53 / 16%);
   border-radius: 8px;
-  position: absolute;
-  right: 0;
-  bottom: 4rem;
+  margin-bottom: 1rem;
 }
 .floatingTopLeftContainer {
   position: absolute;
@@ -45,13 +48,6 @@
   border-radius: 8px;
   top: 1rem;
   left: 1rem;
-  right: 1rem;
-}
-
-.floatingTopRightContainer {
-  position: absolute;
-
-  top: 1rem;
   right: 1rem;
 }
 

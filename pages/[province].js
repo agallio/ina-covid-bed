@@ -1,6 +1,6 @@
 import React from 'react'
-import Head from 'next/head'
 import Link from 'next/link'
+import { NextSeo } from 'next-seo'
 import {
   Container,
   Heading,
@@ -13,6 +13,7 @@ import {
 import useHospitalDataByProvince from '@/hooks/useHospitalDataByProvince'
 import { getProvinceDisplayName } from '@/utils/ProvinceHelper'
 import HospitalCard from '@/components/HospitalCard'
+import SEO from 'next-seo.config'
 
 function ProvincePage(props) {
   const { province } = props
@@ -24,20 +25,24 @@ function ProvincePage(props) {
 
   return (
     <>
-      <Head>
-        <title>
-          {getProvinceDisplayName(province)} Kasur IGD COVID-19 Tersedia |
-          ina-covid-bed
-        </title>
-        <meta
-          name="description"
-          content={`${getProvinceDisplayName(
+      <NextSeo
+        {...SEO({
+          pageTitle: `${getProvinceDisplayName(
             province
-          )} - Kasur IGD COVID-19 Tersedia | ina-covid-bed`}
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
+          )} - Kasur IGD COVID-19 Tersedia`,
+          pageDescription:
+            'Daftar ketersediaan tempat tidur IGD di rumah sakit seluruh Indonesia.',
+          pageURL: `https://bed.ina-covid.com/${province}`,
+          images: [
+            {
+              url: 'http://bed.ina-covid.com/images/og-image-bed.png',
+              width: 1000,
+              height: 500,
+              alt: 'ina-covid-bed-image',
+            },
+          ],
+        })}
+      />
       <Container py="10">
         <Text color="blue.500" fontSize="sm">
           <Link href="/">

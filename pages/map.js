@@ -11,8 +11,9 @@ import mapboxgl from '!mapbox-gl'
 import styles from '@/styles/Map.module.css'
 
 import useHospitalDataByProvince from '@/hooks/useHospitalDataByProvince'
-
+import Select from 'react-select'
 import { provincesWithCities } from '@/utils/constants'
+import { getNearestProvince } from '@/utils/LocationHelper'
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX
 
@@ -23,12 +24,13 @@ export default function Map() {
   const [lat] = useState(-8.670458)
   const [zoom] = useState(9)
 
-  const [city, setCity] = useState({ value: 'bali', label: 'Bali' })
+  const [city, setCity] = useState({ value: 'jakarta', label: 'Jakarta' })
+  const [myLocation, setMyLocation] = useState()
   const { hospitalList } = useHospitalDataByProvince(city.value)
   const isLoading = !Boolean(hospitalList)
 
-  const [popupCityVisible, setPopupCityVisibility] = useState(false)
   const [popupHospital, setPopupHospitalVisibility] = useState(false)
+  const [isSearchingGeo, setSearchingGeo] = useState(false)
 
   useEffect(() => {
     if (map.current) return // initialize map only once
@@ -47,6 +49,37 @@ export default function Map() {
   useEffect(() => {
     updateMap()
   }, [hospitalList])
+
+  const handleSearchGeo = () => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords
+        setSearchingGeo(true)
+        setMyLocation({
+          lat: latitude,
+          lng: longitude,
+        })
+        const nearestProvince = getNearestProvince(latitude, longitude)
+        const province = provincesWithCities.find(
+          (item) => item.province.value === nearestProvince
+        )
+        setCity({
+          label: province.province.name,
+          value: province.province.value,
+        })
+        map.current.flyTo({
+          center: {
+            lat: latitude,
+            lng: longitude,
+          },
+          zoom: 12,
+        })
+      },
+      (err) => {
+        setSearchingGeo(false)
+      }
+    )
+  }
 
   const updateMap = () => {
     if (!hospitalList?.length) return
@@ -146,48 +179,38 @@ export default function Map() {
       />
       <div className={styles.mapboxWrapper}>
         <div ref={mapContainer} className={styles.mapbox} />
+        <div className={styles.floatingTopLeftContainer}>
+          <Select
+            placeholder="Pilih Provinsi"
+            options={makeProvinceOptions()}
+            value={city}
+            onChange={(item) => {
+              setCity(item)
+            }}
+          />
+        </div>
 
         <div className={styles.floatingContainer}>
-          <p
-            onClick={() => setPopupCityVisibility((prev) => !prev)}
-            style={{ marginBottom: '1rem' }}
+          <button className={styles.locationButton} onClick={handleSearchGeo}>
+            📍
+          </button>
+          <div
+            className={styles.hospitalInfoWrapper}
+            onClick={(e) => {
+              e.preventDefault()
+              setPopupHospitalVisibility(true)
+            }}
           >
-            Provinsi: {city.label}{' '}
-            <span style={{ color: '#F87A26', cursor: 'pointer' }}>(Ganti)</span>
-          </p>
-
-          <p onClick={() => setPopupHospitalVisibility(true)}>
-            Jumlah Rumah Sakit: {isLoading ? <Spinner /> : hospitalList?.length}{' '}
-            <span style={{ color: '#F87A26', cursor: 'pointer' }}>
-              (Daftar Rumah Sakit)
-            </span>
-          </p>
+            <p onClick={() => setPopupHospitalVisibility(true)}>
+              Jumlah Rumah Sakit:{' '}
+              {isLoading ? <Spinner /> : hospitalList?.length}{' '}
+              <span style={{ color: '#F87A26', cursor: 'pointer' }}>
+                (Daftar Rumah Sakit)
+              </span>
+            </p>
+          </div>
         </div>
       </div>
-
-      <BottomSheet
-        open={popupCityVisible}
-        onDismiss={() => setPopupCityVisibility(false)}
-      >
-        <div style={{ padding: '1rem' }}>
-          {provincesWithCities.map((item) => (
-            <div
-              style={{ padding: '.5rem 0', cursor: 'pointer' }}
-              key={item.province.value}
-              onClick={() => {
-                setCity({
-                  value: item.province.value,
-                  label: item.province.name,
-                })
-
-                setPopupCityVisibility(false)
-              }}
-            >
-              {item.province.name}
-            </div>
-          ))}
-        </div>
-      </BottomSheet>
 
       <BottomSheet
         open={popupHospital}
@@ -212,11 +235,9 @@ export default function Map() {
               <p style={{ fontWeight: 'bold', marginBottom: '.5rem' }}>
                 {hospital.name}
               </p>
-              <div style={{ display: 'flex', marginBottom: '.5rem' }}>
-                <p style={{ flex: 1 }}>
-                  Tempat tidur tersedia: {hospital.available_bed}
-                </p>
-                <p style={{ flex: 1 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <p>Tempat tidur tersedia: {hospital.available_bed}</p>
+                <p>
                   {hospital.bed_queue
                     ? `${hospital.bed_queue} antrian`
                     : 'Tanpa antrian'}
@@ -229,4 +250,11 @@ export default function Map() {
       </BottomSheet>
     </div>
   )
+}
+
+export const makeProvinceOptions = () => {
+  return provincesWithCities.map((item) => ({
+    value: item.province.value,
+    label: item.province.name,
+  }))
 }

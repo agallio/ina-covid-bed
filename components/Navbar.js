@@ -9,8 +9,9 @@ const Navbar = () => {
   const router = useRouter()
   const isMapPage = router.pathname === '/map'
   return isMapPage ? null : (
-    <Box pos="fixed" top={0} right={0} p={2} zIndex="modal" borderRadius="md">
+    <Box pos="fixed" top={0} right={0} p={2} zIndex="modal">
       <IconButton
+        borderRadius="md"
         bg={bgButton}
         _hover={{
           bg: bgButton,

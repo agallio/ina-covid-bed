@@ -10,10 +10,6 @@
     "format": "prettier --write .",
     "postinstall": "husky install"
   },
-  "engines": {
-    "node": "14.x.x",
-    "npm": "please-use-pnpm"
-  },
   "dependencies": {
     "@chakra-ui/icons": "^1.0.13",
     "@chakra-ui/react": "^1.6.4",

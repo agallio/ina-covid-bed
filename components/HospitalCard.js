@@ -17,7 +17,7 @@ function generateGoogleMapsLink(name) {
 }
 
 export default function HospitalCard(props) {
-  const { hospital } = props
+  const { hospital, onClick, onLocationClick } = props
 
   const lastUpdatedTime = getRelativeLastUpdatedTime(
     hospital.updated_at_minutes
@@ -30,6 +30,15 @@ export default function HospitalCard(props) {
   const bgDistanceNotAvailable = useColorModeValue('red.200', 'red.600')
 
   const hotlineSplitted = hospital.hotline && hospital.hotline.split(',')
+  const locationAction = {
+    ...(onLocationClick
+      ? {
+          onClick: onLocationClick,
+        }
+      : {
+          href: generateGoogleMapsLink(hospital.name),
+        }),
+  }
 
   return (
     <Box
@@ -40,6 +49,7 @@ export default function HospitalCard(props) {
       borderRadius="md"
       shadow="md"
       p={4}
+      onClick={onClick}
     >
       <HStack alignItems="start" spacing="2">
         <VStack align="start" spacing="1" flex="3">
@@ -139,7 +149,7 @@ export default function HospitalCard(props) {
               target="_blank"
               rel="noreferrer"
               size="sm"
-              href={generateGoogleMapsLink(hospital.name)}
+              {...locationAction}
             >
               <span style={{ marginRight: 5 }} aria-label="peta">
                 📍

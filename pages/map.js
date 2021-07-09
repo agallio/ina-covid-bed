@@ -28,8 +28,8 @@ function MapPage(props) {
   const router = useRouter()
   const mapContainer = useRef(null)
   const map = useRef(null)
-  const [lng] = useState(115.212631)
-  const [lat] = useState(-8.670458)
+  const [lng] = useState(106.829361)
+  const [lat] = useState(-6.17311)
   const [zoom] = useState(9)
   const [alternativeProvinces, setAlternativeProvinces] = useState([])
   const [province, setProvince] = useState({

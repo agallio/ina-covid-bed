@@ -17,7 +17,7 @@ function generateGoogleMapsLink(name) {
 }
 
 export default function HospitalCard(props) {
-  const { hospital } = props
+  const { hospital, onClick, onLocationClick } = props
 
   const lastUpdatedTime = getRelativeLastUpdatedTime(
     hospital.updated_at_minutes
@@ -40,6 +40,7 @@ export default function HospitalCard(props) {
       borderRadius="md"
       shadow="md"
       p={4}
+      onClick={onClick}
     >
       <HStack alignItems="start" spacing="2">
         <VStack align="start" spacing="1" flex="3">
@@ -131,22 +132,36 @@ export default function HospitalCard(props) {
               </Button>
             )}
 
-            <Button
-              w="full"
-              as="a"
-              mb={[2, 0]}
-              mr={{ base: '2' }}
-              target="_blank"
-              rel="noreferrer"
-              size="sm"
-              href={generateGoogleMapsLink(hospital.name)}
-            >
-              <span style={{ marginRight: 5 }} aria-label="peta">
-                📍
-              </span>{' '}
-              Lihat Lokasi
-            </Button>
-
+            {typeof onLocationClick === 'function' ? (
+              <Button
+                w="full"
+                mb={[2, 0]}
+                mr={{ base: '2' }}
+                size="sm"
+                onClick={onLocationClick}
+              >
+                <span style={{ marginRight: 5 }} aria-label="peta">
+                  📍
+                </span>{' '}
+                Lihat Lokasi
+              </Button>
+            ) : (
+              <Button
+                w="full"
+                as="a"
+                mb={[2, 0]}
+                mr={{ base: '2' }}
+                target="_blank"
+                rel="noreferrer"
+                size="sm"
+                href={generateGoogleMapsLink(hospital.name)}
+              >
+                <span style={{ marginRight: 5 }} aria-label="peta">
+                  📍
+                </span>{' '}
+                Lihat Lokasi
+              </Button>
+            )}
             <Button
               w="full"
               as="a"

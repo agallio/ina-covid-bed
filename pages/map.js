@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
-import { Spinner } from '@chakra-ui/react'
+import { Box, Spinner } from '@chakra-ui/react'
 import Head from 'next/head'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import 'react-spring-bottom-sheet/dist/style.css'
@@ -14,6 +14,7 @@ import useHospitalDataByProvince from '@/hooks/useHospitalDataByProvince'
 import Select from 'react-select'
 import { provincesWithCities } from '@/utils/constants'
 import { getNearestProvince } from '@/utils/LocationHelper'
+import { text } from 'cheerio/lib/api/manipulation'
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX
 
@@ -160,7 +161,7 @@ export default function Map() {
   }
 
   return (
-    <div position="relative">
+    <Box position="relative" color="black">
       <NextSeo
         {...SEO({
           pageTitle: `${city.label} - Peta Ketersediaan Tempat Tidur`,
@@ -216,7 +217,7 @@ export default function Map() {
         open={popupHospital}
         onDismiss={() => setPopupHospitalVisibility(false)}
       >
-        <div style={{ padding: '1rem' }}>
+        <div style={{ padding: '1rem', color: 'black' }}>
           {hospitalList?.map((hospital) => (
             <div
               style={{
@@ -248,7 +249,7 @@ export default function Map() {
           ))}
         </div>
       </BottomSheet>
-    </div>
+    </Box>
   )
 }
 

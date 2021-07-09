@@ -54,6 +54,7 @@ function ProvincePage(props) {
           ],
         })}
       />
+
       <Container py="10">
         <Text color="blue.600" fontSize="sm">
           <Link href="/" passHref>
@@ -67,7 +68,7 @@ function ProvincePage(props) {
           </Heading>
           {isShowAlternativeProvince && (
             <HStack
-              fontSize="xs"
+              fontSize={['xs', 'sm']}
               w="100%"
               spacing="4"
               justify="center"

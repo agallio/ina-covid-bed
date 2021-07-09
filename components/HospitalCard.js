@@ -1,4 +1,13 @@
-import { Heading, Box, Button, VStack, Text, HStack } from '@chakra-ui/react'
+import {
+  Heading,
+  Box,
+  Button,
+  VStack,
+  Text,
+  HStack,
+  useColorMode,
+  useColorModeValue,
+} from '@chakra-ui/react'
 import { PhoneIcon } from '@chakra-ui/icons'
 
 import { getRelativeLastUpdatedTime } from '@/utils/HospitalHelper'
@@ -13,13 +22,18 @@ export default function HospitalCard(props) {
   const lastUpdatedTime = getRelativeLastUpdatedTime(
     hospital.updated_at_minutes
   )
-
+  const { colorMode } = useColorMode()
+  const isDarkMode = colorMode === 'dark'
+  const bgAvailable = useColorModeValue('white', 'gray.800')
+  const bgNotAvailable = useColorModeValue('red.100', 'red.700')
+  const bgDistanceAvailable = useColorModeValue('gray.200', 'gray.600')
+  const bgDistanceNotAvailable = useColorModeValue('red.200', 'red.600')
   return (
     <Box
       w="100%"
       border="1px solid"
       borderColor={hospital.available_bed > 0 ? 'gray.200' : 'red.400'}
-      bgColor={hospital.available_bed > 0 ? 'white' : 'red.100'}
+      bgColor={hospital.available_bed > 0 ? bgAvailable : bgNotAvailable}
       borderRadius="md"
       shadow="md"
       p={4}
@@ -29,25 +43,35 @@ export default function HospitalCard(props) {
           <Heading as="h2" size="sm">
             {hospital.name}
           </Heading>
-          <Text fontSize="sm" color="gray.600">
+          <Text fontSize="sm" color={isDarkMode ? 'gray.200' : 'gray.600'}>
             {hospital.address}
           </Text>
-          <Text pt="2" fontSize="xs" color="gray.600">
+          <Text
+            pt="2"
+            fontSize="xs"
+            color={isDarkMode ? 'gray.300' : 'gray.600'}
+          >
             Diperbarui {lastUpdatedTime}
           </Text>
         </VStack>
         <VStack align="center" justify="center">
-          <Box
-            w={['24', '28']}
-            p={2}
-            textAlign="center"
-            bgColor={hospital.available_bed > 0 ? 'gray.200' : 'red.200'}
-            borderRadius="md"
-          >
-            <Text fontSize={['sm', 'md']} fontWeight="bold">
-              {hospital.distance.toFixed(2)} KM
-            </Text>
-          </Box>
+          {hospital.distance && (
+            <Box
+              w={['24', '28']}
+              p={2}
+              textAlign="center"
+              bgColor={
+                hospital.available_bed > 0
+                  ? bgDistanceAvailable
+                  : bgDistanceNotAvailable
+              }
+              borderRadius="md"
+            >
+              <Text fontSize={['sm', 'md']} fontWeight="bold">
+                {hospital.distance.toFixed(2)} KM
+              </Text>
+            </Box>
+          )}
           {hospital.available_bed > 0 ? (
             <>
               <Text size="sm">Tersedia:</Text>

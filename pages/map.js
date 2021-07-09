@@ -160,7 +160,7 @@ export default function Map() {
   }
 
   return (
-    <>
+    <div position="relative" style={{ color: 'black' }}>
       <NextSeo
         {...SEO({
           pageTitle: `${city.label} - Peta Ketersediaan Tempat Tidur`,
@@ -177,83 +177,78 @@ export default function Map() {
           ],
         })}
       />
-
-      <div position="relative">
-        <div className={styles.mapboxWrapper}>
-          <div ref={mapContainer} className={styles.mapbox} />
-          <div className={styles.floatingTopLeftContainer}>
-            <Select
-              placeholder="Pilih Provinsi"
-              options={makeProvinceOptions()}
-              value={city}
-              onChange={(item) => {
-                setCity(item)
-              }}
-            />
-          </div>
-
-          <div className={styles.floatingContainer}>
-            <button className={styles.locationButton} onClick={handleSearchGeo}>
-              📍
-            </button>
-            <div
-              className={styles.hospitalInfoWrapper}
-              onClick={(e) => {
-                e.preventDefault()
-                setPopupHospitalVisibility(true)
-              }}
-            >
-              <p onClick={() => setPopupHospitalVisibility(true)}>
-                Jumlah Rumah Sakit:{' '}
-                {isLoading ? <Spinner /> : hospitalList?.length}{' '}
-                <span style={{ color: '#F87A26', cursor: 'pointer' }}>
-                  (Daftar Rumah Sakit)
-                </span>
-              </p>
-            </div>
-          </div>
+      <div className={styles.mapboxWrapper}>
+        <div ref={mapContainer} className={styles.mapbox} />
+        <div className={styles.floatingTopLeftContainer}>
+          <Select
+            placeholder="Pilih Provinsi"
+            options={makeProvinceOptions()}
+            value={city}
+            onChange={(item) => {
+              setCity(item)
+            }}
+          />
         </div>
 
-        <BottomSheet
-          open={popupHospital}
-          onDismiss={() => setPopupHospitalVisibility(false)}
-        >
-          <div style={{ padding: '1rem' }}>
-            {hospitalList?.map((hospital) => (
-              <div
-                style={{
-                  padding: '.5rem 0',
-                  borderBottom: '1px solid #EAEAEA',
-                }}
-                key={hospital.name}
-                onClick={() => {
-                  setPopupHospitalVisibility(false)
-                  map.current.flyTo({
-                    center: [hospital.lon, hospital.lat],
-                    zoom: 12,
-                  })
-                }}
-              >
-                <p style={{ fontWeight: 'bold', marginBottom: '.5rem' }}>
-                  {hospital.name}
-                </p>
-                <div
-                  style={{ display: 'flex', justifyContent: 'space-between' }}
-                >
-                  <p>Tempat tidur tersedia: {hospital.available_bed}</p>
-                  <p>
-                    {hospital.bed_queue
-                      ? `${hospital.bed_queue} antrian`
-                      : 'Tanpa antrian'}
-                  </p>
-                </div>
-                <p>{hospital.address}</p>
-              </div>
-            ))}
+        <div className={styles.floatingContainer}>
+          <button className={styles.locationButton} onClick={handleSearchGeo}>
+            📍
+          </button>
+          <div
+            className={styles.hospitalInfoWrapper}
+            onClick={(e) => {
+              e.preventDefault()
+              setPopupHospitalVisibility(true)
+            }}
+          >
+            <p onClick={() => setPopupHospitalVisibility(true)}>
+              Jumlah Rumah Sakit:{' '}
+              {isLoading ? <Spinner /> : hospitalList?.length}{' '}
+              <span style={{ color: '#F87A26', cursor: 'pointer' }}>
+                (Daftar Rumah Sakit)
+              </span>
+            </p>
           </div>
-        </BottomSheet>
+        </div>
       </div>
-    </>
+
+      <BottomSheet
+        open={popupHospital}
+        onDismiss={() => setPopupHospitalVisibility(false)}
+      >
+        <div style={{ padding: '1rem', color: 'black' }}>
+          {hospitalList?.map((hospital) => (
+            <div
+              style={{
+                padding: '.5rem 0',
+                borderBottom: '1px solid #EAEAEA',
+              }}
+              key={hospital.name}
+              onClick={() => {
+                setPopupHospitalVisibility(false)
+                map.current.flyTo({
+                  center: [hospital.lon, hospital.lat],
+                  zoom: 12,
+                })
+              }}
+            >
+              <p style={{ fontWeight: 'bold', marginBottom: '.5rem' }}>
+                {hospital.name}
+              </p>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <p>Tempat tidur tersedia: {hospital.available_bed}</p>
+                <p>
+                  {hospital.bed_queue
+                    ? `${hospital.bed_queue} antrian`
+                    : 'Tanpa antrian'}
+                </p>
+              </div>
+              <p>{hospital.address}</p>
+            </div>
+          ))}
+        </div>
+      </BottomSheet>
+    </div>
   )
 }
 

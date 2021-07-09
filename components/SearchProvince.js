@@ -16,7 +16,6 @@ import { provinceList } from '@/utils/ProvinceHelper'
 
 function ProvinceItem(props) {
   const { province, onClick } = props
-
   function handleClickItem() {
     onClick(province)
   }
@@ -27,10 +26,11 @@ function ProvinceItem(props) {
       onClick={handleClickItem}
       cursor="pointer"
       borderBottom="1px solid"
-      borderColor="gray.200"
-      color="black"
+      background={useColorModeValue('white', 'gray.800')}
+      borderColor={useColorModeValue('gray.500', 'gray.300')}
+      color={useColorModeValue('black', 'white')}
       _hover={{
-        background: 'green.50',
+        background: useColorModeValue('green.50', 'blue.800'),
       }}
       _last={{ borderColor: 'transparent' }}
     >

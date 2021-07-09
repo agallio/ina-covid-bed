@@ -111,19 +111,19 @@ export default function Map() {
   )
 
   const updateMap = () => {
-    if (!hospitalList?.length || !map.current.isStyleLoaded()) return
+    if (!availableHospital?.length || !map.current.isStyleLoaded()) return
 
     map.current.flyTo({
       center: [
-        parseFloat(hospitalList[0]?.lon),
-        parseFloat(hospitalList[0]?.lat),
+        parseFloat(availableHospital[0]?.lon),
+        parseFloat(availableHospital[0]?.lat),
       ],
       zoom: 12,
     })
 
     const id = Math.random() * 100000000000
 
-    const features = hospitalList.map((hospital) => ({
+    const features = availableHospital.map((hospital) => ({
       type: 'Feature',
       properties: {
         description: `<strong>${hospital.name}</strong>

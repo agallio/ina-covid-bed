@@ -255,11 +255,11 @@ export default async function getBedAvailability(req, res) {
       return
     }
 
-    const filteredAvailableBed = hospitalArray.filter(
-      (hos) => hos.available_bed > 0
-    )
+    // const filteredAvailableBed = hospitalArray.filter(
+    //   (hos) => hos.available_bed > 0
+    // )
 
-    const filteredAvailableBedWithLocation = filteredAvailableBed.map((hos) => {
+    const filteredAvailableBedWithLocation = hospitalArray.map((hos) => {
       const url = `http://yankes.kemkes.go.id/app/siranap/rumah_sakit/${hos.hospital_code}`
       return axios
         .get(url)

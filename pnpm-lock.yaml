@@ -16,10 +16,12 @@ specifiers:
   isomorphic-unfetch: ^3.1.0
   mapbox-gl: ^2.3.1
   next: 11.0.1
+  next-seo: ^4.26.0
   prettier: ^2.3.2
   query-string: ^7.0.1
   react: 17.0.2
   react-dom: 17.0.2
+  react-select: ^4.3.1
   react-spring-bottom-sheet: ^3.4.0
   swr: ^0.5.6
 
@@ -34,9 +36,11 @@ dependencies:
   isomorphic-unfetch: 3.1.0
   mapbox-gl: 2.3.1
   next: 11.0.1_react-dom@17.0.2+react@17.0.2
+  next-seo: 4.26.0_de3a444b12c9ebc463b1db22b5bac6fe
   query-string: 7.0.1
   react: 17.0.2
   react-dom: 17.0.2_react@17.0.2
+  react-select: 4.3.1_react-dom@17.0.2+react@17.0.2
   react-spring-bottom-sheet: 3.4.0_react-dom@17.0.2+react@17.0.2
   swr: 0.5.6_react@17.0.2
 
@@ -2077,6 +2081,13 @@ packages:
       esutils: 2.0.3
     dev: true
 
+  /dom-helpers/5.2.1:
+    resolution: {integrity: sha512-nRCa7CK3VTrM2NmGkIy4cbK7IZlgBE/PYMn55rrXefr5xXDP0LdtfPnblFDoVdcAfslJ7or6iqAUnx0CCGIWQA==}
+    dependencies:
+      '@babel/runtime': 7.14.6
+      csstype: 3.0.8
+    dev: false
+
   /dom-serializer/1.3.2:
     resolution: {integrity: sha512-5c54Bk5Dw4qAxNOI1pFEizPSjVsx5+bpJKmL2kPn8JhBUq2q09tTCa3mjijun2NfK78NMouDYNMBkOrPZiS+ig==}
     dependencies:
@@ -3245,6 +3256,10 @@ packages:
       safe-buffer: 5.2.1
     dev: false
 
+  /memoize-one/5.2.1:
+    resolution: {integrity: sha512-zYiwtZUcYyXKo/np96AGZAckk+FWWsUdJ3cHGGmld7+AhvcWmQyGCYUh1hc4Q/pkOhb65dQR/pqCyK0cOaHz4Q==}
+    dev: false
+
   /merge-stream/2.0.0:
     resolution: {integrity: sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==}
     dev: false
@@ -3317,6 +3332,18 @@ packages:
   /natural-compare/1.4.0:
     resolution: {integrity: sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=}
     dev: true
+
+  /next-seo/4.26.0_de3a444b12c9ebc463b1db22b5bac6fe:
+    resolution: {integrity: sha512-5TqywQ3XAwqdmEU1AyNZjR7WdDKFTkDD8aBtgQelPvzBUEy8i0mTjtiw+09jhiHFNik6FqS8uPKCaYcY6jRgSQ==}
+    peerDependencies:
+      next: ^8.1.1-canary.54 || >=9.0.0
+      react: '>=16.0.0'
+      react-dom: '>=16.0.0'
+    dependencies:
+      next: 11.0.1_react-dom@17.0.2+react@17.0.2
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+    dev: false
 
   /next/11.0.1_react-dom@17.0.2+react@17.0.2:
     resolution: {integrity: sha512-yR7be7asNbvpVNpi6xxEg28wZ7Gqmj1nOt0sABH9qORmF3+pms2KZ7Cng33oK5nqPIzEEFJD0pp2PCe3/ueMIg==}
@@ -3923,6 +3950,15 @@ packages:
       - '@types/react'
     dev: false
 
+  /react-input-autosize/3.0.0_react@17.0.2:
+    resolution: {integrity: sha512-nL9uS7jEs/zu8sqwFE5MAPx6pPkNAriACQ2rGLlqmKr2sPGtN7TXTyDdQt4lbNXVx7Uzadb40x8qotIuru6Rhg==}
+    peerDependencies:
+      react: ^16.3.0 || ^17.0.0
+    dependencies:
+      prop-types: 15.7.2
+      react: 17.0.2
+    dev: false
+
   /react-is/16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -3966,6 +4002,26 @@ packages:
       tslib: 1.14.1
       use-callback-ref: 1.2.5_react@17.0.2
       use-sidecar: 1.0.5_react@17.0.2
+    dev: false
+
+  /react-select/4.3.1_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-HBBd0dYwkF5aZk1zP81Wx5UsLIIT2lSvAY2JiJo199LjoLHoivjn9//KsmvQMEFGNhe58xyuOITjfxKCcGc62Q==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0
+      react-dom: ^16.8.0 || ^17.0.0
+    dependencies:
+      '@babel/runtime': 7.14.6
+      '@emotion/cache': 11.4.0
+      '@emotion/react': 11.4.0_react@17.0.2
+      memoize-one: 5.2.1
+      prop-types: 15.7.2
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+      react-input-autosize: 3.0.0_react@17.0.2
+      react-transition-group: 4.4.2_react-dom@17.0.2+react@17.0.2
+    transitivePeerDependencies:
+      - '@babel/core'
+      - '@types/react'
     dev: false
 
   /react-spring-bottom-sheet/3.4.0_react-dom@17.0.2+react@17.0.2:
@@ -4014,6 +4070,20 @@ packages:
       invariant: 2.2.4
       react: 17.0.2
       tslib: 1.14.1
+    dev: false
+
+  /react-transition-group/4.4.2_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-/RNYfRAMlZwDSr6z4zNKV6xu53/e2BuaBbGhbyYIXTrmgu/bGHzmqOs7mJSJBHy9Ud+ApHx3QjrkKSp1pxvlFg==}
+    peerDependencies:
+      react: '>=16.6.0'
+      react-dom: '>=16.6.0'
+    dependencies:
+      '@babel/runtime': 7.14.6
+      dom-helpers: 5.2.1
+      loose-envify: 1.4.0
+      prop-types: 15.7.2
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
     dev: false
 
   /react-use-gesture/8.0.1_react@17.0.2:

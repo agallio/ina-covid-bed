@@ -8,8 +8,14 @@ class MyDocument extends Document {
 
   render() {
     return (
-      <Html>
+      <Html lang="id">
         <Head />
+        <script
+          async
+          defer
+          data-website-id="e8912acb-bea1-484d-a8e1-f737d0494742"
+          src="https://analytics.agallio.xyz/umami.js"
+        ></script>
         <body>
           <Main />
           <NextScript />

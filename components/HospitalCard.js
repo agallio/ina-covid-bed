@@ -29,20 +29,8 @@ export default function HospitalCard(props) {
   const bgDistanceAvailable = useColorModeValue('gray.200', 'gray.600')
   const bgDistanceNotAvailable = useColorModeValue('red.200', 'red.600')
 
-<<<<<<< HEAD
   const hotlineSplitted = hospital.hotline && hospital.hotline.split(',')
-  const locationAction = {
-    ...(onLocationClick
-      ? {
-          onClick: onLocationClick,
-        }
-      : {
-          href: generateGoogleMapsLink(hospital.name),
-        }),
-  }
 
-=======
->>>>>>> e7b7987 (fix: location button click action)
   return (
     <Box
       w="100%"

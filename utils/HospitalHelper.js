@@ -8,10 +8,14 @@ export function getRelativeLastUpdatedTime(lastUpdatedInMinutes) {
       'hour'
     )
   } else {
-    displayedTime = relativeTimeFormat.format(
-      -Math.round(lastUpdatedInMinutes),
-      'minute'
-    )
+    if (-Math.round(lastUpdatedInMinutes) === 0) {
+      displayedTime = 'kurang dari 1 menit yang lalu'
+    } else {
+      displayedTime = relativeTimeFormat.format(
+        -Math.round(lastUpdatedInMinutes),
+        'minute'
+      )
+    }
   }
 
   return displayedTime

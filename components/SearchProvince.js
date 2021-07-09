@@ -31,6 +31,7 @@ function ProvinceItem(props) {
       cursor="pointer"
       borderBottom="1px solid"
       borderColor="gray.200"
+      color="black"
       _hover={{
         background: 'green.50',
       }}

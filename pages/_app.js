@@ -1,20 +1,16 @@
 import '@/styles/globals.css'
-import { ChakraProvider, ColorModeProvider } from '@chakra-ui/react'
+import { ChakraProvider } from '@chakra-ui/react'
 import Footer from '@/components/Footer'
 import { DefaultSeo } from 'next-seo'
 import SEO from 'next-seo.config'
+import Navbar from '@/components/Navbar'
 
 function MyApp({ Component, pageProps }) {
   return (
     <ChakraProvider resetCSS>
-      <ColorModeProvider
-        options={{
-          useSystemColorMode: false,
-        }}
-      >
-        <DefaultSeo {...SEO()} />
-        <Component {...pageProps} />
-      </ColorModeProvider>
+      <Navbar />
+      <DefaultSeo {...SEO()} />
+      <Component {...pageProps} />
       <Footer />
     </ChakraProvider>
   )

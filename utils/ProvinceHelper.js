@@ -5,6 +5,10 @@ export const provinceList = provincesWithCities.map((row) => ({
   name: row.province.name,
 }))
 
+/**
+ * @param {string} province
+ * @returns {string}
+ */
 export function getProvinceDisplayName(province) {
   const split = province.split('_')
   const capitalized = split.map((word) => {

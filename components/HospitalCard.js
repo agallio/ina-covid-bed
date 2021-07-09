@@ -7,6 +7,7 @@ import {
   Text,
   Flex,
   useColorMode,
+  useColorModeValue,
 } from '@chakra-ui/react'
 import { PhoneIcon } from '@chakra-ui/icons'
 
@@ -23,13 +24,16 @@ export default function HospitalCard(props) {
   const lastUpdatedTime = getRelativeLastUpdatedTime(
     hospital.updated_at_minutes
   )
-
+  const bgAvailable = useColorModeValue('white', 'gray.800')
+  const bgNotAvailable = useColorModeValue('red.100', 'red.700')
+  const bgDistanceAvailable = useColorModeValue('gray.200', 'gray.600')
+  const bgDistanceNotAvailable = useColorModeValue('red.200', 'red.600')
   return (
     <Box
       w="100%"
       border="1px solid"
       borderColor={hospital.available_bed > 0 ? 'gray.200' : 'red.400'}
-      bgColor={hospital.available_bed > 0 ? 'white' : 'red.100'}
+      bgColor={hospital.available_bed > 0 ? bgAvailable : bgNotAvailable}
       borderRadius="md"
       shadow="md"
       p={4}
@@ -63,11 +67,15 @@ export default function HospitalCard(props) {
             w={['24', '28']}
             p={2}
             textAlign="center"
-            bgColor={hospital.available_bed > 0 ? 'gray.200' : 'red.200'}
+            bgColor={
+              hospital.available_bed > 0
+                ? bgDistanceAvailable
+                : bgDistanceNotAvailable
+            }
             borderRadius="md"
           >
             <Text fontSize={['sm', 'md']} fontWeight="bold">
-              {hospital.distance.toFixed(2)} KM
+              {hospital.distance?.toFixed(2)} KM
             </Text>
           </Box>
           {hospital.available_bed > 0 ? (

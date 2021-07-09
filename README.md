@@ -9,6 +9,8 @@
 
 ## Develop
 
+You need the API keys to develop. If you want it, hit me up on Twitter. 
+
 ```bash
 # install
 $ pnpm i

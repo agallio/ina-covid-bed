@@ -27,7 +27,7 @@ export default async function getBedAvailability(req, res) {
     return
   }
 
-  if (revalidate !== 'true' && revalidate !== 'false') {
+  if (revalidate && revalidate !== 'true' && revalidate !== 'false') {
     res.status(400).json({
       status: 400,
       data: null,

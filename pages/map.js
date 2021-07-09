@@ -49,6 +49,7 @@ export default function Map() {
 
     map.current.on('load', function () {
       map.current.resize()
+      updateMap()
     })
   })
 
@@ -100,7 +101,7 @@ export default function Map() {
   }
 
   const updateMap = () => {
-    if (!hospitalList?.length) return
+    if (!hospitalList?.length || !map.current.isStyleLoaded()) return
 
     map.current.flyTo({
       center: [

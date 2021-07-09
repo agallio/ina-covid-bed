@@ -1,5 +1,12 @@
 import { useEffect, useState, useRef, useMemo } from 'react'
-import { Spinner } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
+import {
+  Container,
+  Button,
+  Spinner,
+  useColorModeValue,
+  LightMode,
+} from '@chakra-ui/react'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import 'react-spring-bottom-sheet/dist/style.css'
 import { BottomSheet } from 'react-spring-bottom-sheet'
@@ -17,27 +24,33 @@ import { getNearestProvinces } from '@/utils/LocationHelper'
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX
 
-export default function Map() {
+function MapPage(props) {
+  const router = useRouter()
   const mapContainer = useRef(null)
   const map = useRef(null)
   const [lng] = useState(115.212631)
   const [lat] = useState(-8.670458)
   const [zoom] = useState(9)
   const [alternativeProvinces, setAlternativeProvinces] = useState([])
-
   const [province, setProvince] = useState({
     value: 'jakarta',
     label: 'Jakarta',
   })
-  const [myLocation, setMyLocation] = useState()
+  const [popupHospital, setPopupHospitalVisibility] = useState(false)
+  const [_, setSearchingGeo] = useState(false)
+
+  const [urlLat, urlLon] = (props.geo ?? '').split(',')
+  const geo = props.geo ? { lat: urlLat, lon: urlLon } : null
+
   const { bedFull, hospitalList } = useHospitalDataByProvince(
     province.value,
-    myLocation
+    geo
   )
+
   const isLoading = !Boolean(hospitalList)
 
-  const [popupHospital, setPopupHospitalVisibility] = useState(false)
-  const [isSearchingGeo, setSearchingGeo] = useState(false)
+  const bgCard = useColorModeValue('white', 'gray.800')
+  const textCard = useColorModeValue('black', 'white')
 
   useEffect(() => {
     if (map.current) return // initialize map only once
@@ -58,9 +71,18 @@ export default function Map() {
     updateMap()
   }, [hospitalList])
 
-  const handleChooseProvince = (province) => {
+  const handleChooseProvince = (province, type = 'auto') => {
     setProvince({ value: province.value, label: province.name })
-    setAlternativeProvinces([])
+
+    if (geo && type === 'auto') {
+      const nearestProvinces = getNearestProvinces(geo.lat, geo.lon)
+      setAlternativeProvinces(
+        nearestProvinces.slice(0, 3).filter((p) => p.value !== province.value)
+      )
+    } else {
+      setAlternativeProvinces([])
+      router.push('/map')
+    }
   }
 
   const handleSearchGeo = () => {
@@ -68,10 +90,6 @@ export default function Map() {
       (position) => {
         const { latitude, longitude } = position.coords
         setSearchingGeo(true)
-        setMyLocation({
-          lat: latitude,
-          lon: longitude,
-        })
         const nearestProvinces = getNearestProvinces(latitude, longitude)
 
         setProvince({
@@ -79,6 +97,7 @@ export default function Map() {
           value: nearestProvinces[0].value,
         })
         setAlternativeProvinces(nearestProvinces.slice(1, 3))
+
         map.current.flyTo({
           center: {
             lat: latitude,
@@ -87,9 +106,17 @@ export default function Map() {
           zoom: 12,
         })
 
-        new mapboxgl.Marker()
-          .setLngLat([longitude, latitude])
-          .addTo(map.current)
+        if (
+          !map.current.getBounds().contains({ lat: latitude, lng: longitude })
+        ) {
+          new mapboxgl.Marker()
+            .setLngLat([longitude, latitude])
+            .addTo(map.current)
+        }
+
+        if (!geo) {
+          router.push(`/map?geo=${latitude},${longitude}`)
+        }
       },
       (err) => {
         setSearchingGeo(false)
@@ -113,10 +140,17 @@ export default function Map() {
   const updateMap = () => {
     if (!availableHospital?.length || !map.current.isStyleLoaded()) return
 
+    const geoAvailableInFirstRender =
+      geo && !map.current.getBounds().contains({ lat: geo.lat, lng: geo.lon })
+
     map.current.flyTo({
       center: [
-        parseFloat(availableHospital[0]?.lon),
-        parseFloat(availableHospital[0]?.lat),
+        parseFloat(
+          geoAvailableInFirstRender ? geo.lon : availableHospital[0]?.lon
+        ),
+        parseFloat(
+          geoAvailableInFirstRender ? geo.lat : availableHospital[0]?.lat
+        ),
       ],
       zoom: 12,
     })
@@ -127,8 +161,15 @@ export default function Map() {
       type: 'Feature',
       properties: {
         description: `<strong>${hospital.name}</strong>
-        <p>Tempat tidur tersedia: ${hospital.available_bed} | Antrian: ${hospital.bed_queue}</p>
-        <p>Hotline: ${hospital.hotline} | <a href="${hospital.bed_detail_link}" target="_blank">Detail</a></p>
+        <p>Tempat tidur tersedia: ${hospital.available_bed} | Antrian: ${
+          hospital.bed_queue
+        }</p>
+        <p>Hotline: <a href="${
+          hospital.hotline ? `tel:${hospital.hotline}` : '#'
+        }" target="_blank" rel="noreferrer">${hospital.hotline}</a>
+        | <a href="${
+          hospital.bed_detail_link
+        }" target="_blank" rel="noreferrer">Detail</a></p>
         <p style="margin-top: .5rem">${hospital.address}</p>`,
         icon: 'hospital-15',
       },
@@ -186,6 +227,16 @@ export default function Map() {
     map.current.on('mouseleave', `places-${id}`, function () {
       map.current.getCanvas().style.cursor = ''
     })
+
+    if (geoAvailableInFirstRender) {
+      const nearestProvinces = getNearestProvinces(geo.lat, geo.lon)
+      setProvince({
+        label: nearestProvinces[0].name,
+        value: nearestProvinces[0].value,
+      })
+      setAlternativeProvinces(nearestProvinces.slice(1, 3))
+      new mapboxgl.Marker().setLngLat([geo.lon, geo.lat]).addTo(map.current)
+    }
   }
 
   return (
@@ -216,7 +267,7 @@ export default function Map() {
         <Box ref={mapContainer} height="100%" width="100%" />
         <Box
           position="absolute"
-          background="white"
+          backgroundColor={bgCard}
           padding="1rem"
           boxShadow="0 2px 8px 0 rgb(48 49 53 / 16%)"
           borderRadius="8px"
@@ -226,7 +277,7 @@ export default function Map() {
           width={{ md: '400px' }}
         >
           <SearchProvince
-            onChooseProvince={handleChooseProvince}
+            onChooseProvince={(prov) => handleChooseProvince(prov, 'manual')}
             onSearchGeo={handleSearchGeo}
             disabled={isLoading}
             value={province.label}
@@ -257,28 +308,36 @@ export default function Map() {
 
         <Box
           position="absolute"
-          bottom="1rem"
+          bottom="2.5rem"
           left="1rem"
           right="1rem"
           borderRadius="8px"
           padding="1rem"
           boxShadow="0 2px 8px 0 rgb(48 49 53 / 16%)"
-          background="white"
-          onClick={(e) => {
-            e.preventDefault()
-            setPopupHospitalVisibility(true)
-          }}
+          bgColor={bgCard}
+          w={{ sm: 'auto', md: '550px' }}
+          display="flex"
+          flexDir={['column', 'row']}
+          alignItems="center"
+          justifyContent={['center', 'space-between']}
         >
-          <Text onClick={() => setPopupHospitalVisibility(true)}>
-            {isLoading ? (
-              <Spinner />
-            ) : (
-              `${availableHospital.length} rumah sakit tersedia dari ${hospitalList?.length} `
-            )}
-            <span style={{ color: '#F87A26', cursor: 'pointer' }}>
-              (Daftar Rumah Sakit)
-            </span>
-          </Text>
+          {!isLoading && (
+            <Box display="flex" color={textCard}>
+              <Text>
+                <b>{availableHospital.length}</b> rumah sakit tersedia dari{' '}
+                <b>{hospitalList?.length}</b>
+              </Text>
+            </Box>
+          )}
+          <Button
+            mt={!isLoading ? ['3', '0'] : undefined}
+            w={isLoading ? 'full' : ['full', '60']}
+            onClick={() => setPopupHospitalVisibility(true)}
+            isLoading={isLoading}
+            colorScheme="blue"
+          >
+            Lihat Daftar Rumah Sakit
+          </Button>
         </Box>
       </Box>
 
@@ -286,45 +345,52 @@ export default function Map() {
         open={popupHospital}
         onDismiss={() => setPopupHospitalVisibility(false)}
       >
-        <Box padding="1rem" color="black">
-          <VStack align="start" spacing="4">
-            {!isLoading ? (
-              hospitalList.map((hospital) => (
-                <HospitalCard
-                  onLocationClick={() => handleHospitalClick(hospital)}
-                  onClick={() => handleHospitalClick(hospital)}
-                  key={hospital.hospital_code}
-                  hospital={hospital}
-                />
-              ))
-            ) : (
-              <Box w="100%" textAlign="center">
-                <Spinner size="lg" />
-              </Box>
-            )}
+        <LightMode>
+          <Container px="10" color="black">
+            <VStack align="start" spacing="4">
+              {!isLoading ? (
+                hospitalList.map((hospital, idx) => (
+                  <HospitalCard
+                    key={idx}
+                    onLocationClick={() => handleHospitalClick(hospital)}
+                    onClick={() => handleHospitalClick(hospital)}
+                    hospital={hospital}
+                  />
+                ))
+              ) : (
+                <Box w="100%" textAlign="center">
+                  <Spinner size="lg" />
+                </Box>
+              )}
 
-            {!bedFull && hospitalList && hospitalList.length < 1 && (
-              <Text textAlign="center" w="100%" p="24" color="gray.600">
-                Tidak ditemukan data rumah sakit di provinsi ini
-              </Text>
-            )}
-            {bedFull && (
-              <Text
-                fontSize="xl"
-                textAlign="center"
-                w="100%"
-                py="24"
-                color="gray.800"
-              >
-                ⚠️ Semua rumah sakit di{' '}
-                <b>{getProvinceDisplayName(province)}</b> telah penuh! 😔
-              </Text>
-            )}
-          </VStack>
-        </Box>
+              {!bedFull && hospitalList && hospitalList.length < 1 && (
+                <Text textAlign="center" w="100%" p="24" color="gray.600">
+                  Tidak ditemukan data rumah sakit di provinsi ini
+                </Text>
+              )}
+              {bedFull && (
+                <Text
+                  fontSize="xl"
+                  textAlign="center"
+                  w="100%"
+                  py="24"
+                  color="gray.800"
+                >
+                  ⚠️ Semua rumah sakit di{' '}
+                  <b>{getProvinceDisplayName(province)}</b> telah penuh! 😔
+                </Text>
+              )}
+            </VStack>
+          </Container>
+        </LightMode>
       </BottomSheet>
     </Box>
   )
+}
+
+MapPage.getInitialProps = async ({ query }) => {
+  const { geo } = query
+  return { geo }
 }
 
 export const makeProvinceOptions = () => {
@@ -333,3 +399,5 @@ export const makeProvinceOptions = () => {
     label: item.province.name,
   }))
 }
+
+export default MapPage

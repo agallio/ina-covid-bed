@@ -94,90 +94,101 @@ export default function HospitalCard(props) {
         </VStack>
       </HStack>
 
-      {hospital.available_bed > 0 && (
-        <Box mt="4" pt="4" borderTop="1px solid" borderTopColor="gray.300">
-          <Box display="flex" flexDirection={['column', 'row']}>
-            {hotlineSplitted.length > 1 ? (
-              hotlineSplitted.map((item) => (
+      <Box
+        mt="4"
+        pt="4"
+        borderTop="1px solid"
+        borderTopColor={hospital.available_bed === 0 ? 'red.300' : 'gray.300'}
+      >
+        <Box display="flex" flexDirection={['column', 'row']}>
+          {hospital.available_bed > 0 && (
+            <>
+              {hotlineSplitted.length > 1 ? (
+                hotlineSplitted.map((item) => (
+                  <Button
+                    key={item}
+                    as="a"
+                    w="full"
+                    mb={[2, 0]}
+                    mr={{ base: '2' }}
+                    size="sm"
+                    leftIcon={item.length ? <PhoneIcon /> : null}
+                    colorScheme="blue"
+                    disabled={!item || item.length < 8}
+                    href={`tel:${item}`}
+                  >
+                    {item}
+                  </Button>
+                ))
+              ) : (
                 <Button
-                  key={item}
                   as="a"
                   w="full"
                   mb={[2, 0]}
                   mr={{ base: '2' }}
                   size="sm"
-                  leftIcon={item.length ? <PhoneIcon /> : null}
+                  leftIcon={hospital.hotline ? <PhoneIcon /> : null}
                   colorScheme="blue"
-                  disabled={!item || item.length < 8}
-                  href={`tel:${item}`}
+                  disabled={!hospital.hotline || hospital.hotline.length < 8}
+                  href={`tel:${hospital.hotline}`}
                 >
-                  {item}
+                  {!hospital.hotline || hospital.hotline.length < 8
+                    ? 'Hotline tidak tersedia'
+                    : hospital.hotline}
                 </Button>
-              ))
-            ) : (
-              <Button
-                as="a"
-                w="full"
-                mb={[2, 0]}
-                mr={{ base: '2' }}
-                size="sm"
-                leftIcon={hospital.hotline ? <PhoneIcon /> : null}
-                colorScheme="blue"
-                disabled={!hospital.hotline || hospital.hotline.length < 8}
-                href={`tel:${hospital.hotline}`}
-              >
-                {!hospital.hotline || hospital.hotline.length < 8
-                  ? 'Hotline tidak tersedia'
-                  : hospital.hotline}
-              </Button>
-            )}
+              )}
 
-            {typeof onLocationClick === 'function' ? (
-              <Button
-                w="full"
-                mb={[2, 0]}
-                mr={{ base: '2' }}
-                size="sm"
-                onClick={onLocationClick}
-              >
-                <span style={{ marginRight: 5 }} aria-label="peta">
-                  📍
-                </span>{' '}
-                Lihat Lokasi
-              </Button>
-            ) : (
-              <Button
-                w="full"
-                as="a"
-                mb={[2, 0]}
-                mr={{ base: '2' }}
-                target="_blank"
-                rel="noreferrer"
-                size="sm"
-                href={generateGoogleMapsLink(hospital.name)}
-              >
-                <span style={{ marginRight: 5 }} aria-label="peta">
-                  📍
-                </span>{' '}
-                Lihat Lokasi
-              </Button>
-            )}
-            <Button
-              w="full"
-              as="a"
-              target="_blank"
-              rel="noreferrer"
-              size="sm"
-              href={hospital.bed_detail_link}
-            >
-              <span style={{ marginRight: 5 }} aria-label="kasur">
-                🛏
-              </span>{' '}
-              Lihat Detail Kasur
-            </Button>
-          </Box>
+              {typeof onLocationClick === 'function' ? (
+                <Button
+                  w="full"
+                  mb={[2, 0]}
+                  mr={{ base: '2' }}
+                  size="sm"
+                  onClick={onLocationClick}
+                >
+                  <span style={{ marginRight: 5 }} aria-label="peta">
+                    📍
+                  </span>{' '}
+                  Lihat Lokasi
+                </Button>
+              ) : (
+                <Button
+                  w="full"
+                  as="a"
+                  mb={[2, 0]}
+                  mr={{ base: '2' }}
+                  target="_blank"
+                  rel="noreferrer"
+                  size="sm"
+                  href={generateGoogleMapsLink(hospital.name)}
+                >
+                  <span style={{ marginRight: 5 }} aria-label="peta">
+                    📍
+                  </span>{' '}
+                  Lihat Lokasi
+                </Button>
+              )}
+            </>
+          )}
+
+          <Button
+            w="full"
+            as="a"
+            target="_blank"
+            rel="noreferrer"
+            size="sm"
+            href={hospital.bed_detail_link}
+            colorScheme={
+              !isDarkMode && hospital.available_bed === 0 ? 'red' : 'gray'
+            }
+          >
+            <span style={{ marginRight: 5 }} aria-label="kasur">
+              🛏
+            </span>{' '}
+            Lihat Detail Kasur
+          </Button>
         </Box>
-      )}
+      </Box>
     </Box>
   )
 }

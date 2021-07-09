@@ -1,12 +1,9 @@
-import React, { useState } from 'react'
-import { useRouter } from 'next/router'
+import React, { useState, useEffect } from 'react'
 import {
-  VStack,
   Box,
   Input,
   List,
   ListItem,
-  Heading,
   InputGroup,
   InputLeftElement,
   Button,
@@ -15,13 +12,12 @@ import {
 import { SearchIcon } from '@chakra-ui/icons'
 
 import { provinceList } from '@/utils/ProvinceHelper'
-import { getNearestProvince } from '@/utils/LocationHelper'
 
 function ProvinceItem(props) {
   const { province, onClick } = props
 
   function handleClickItem() {
-    onClick(province.value)
+    onClick(province)
   }
 
   return (
@@ -42,32 +38,23 @@ function ProvinceItem(props) {
   )
 }
 
-function SearchProvince() {
+function SearchProvince({ onChooseProvince, onSearchGeo, disabled, value }) {
+  const [inputFocus, setInputFocus] = useState(false)
   const [inputProvince, setInputProvince] = useState('')
-  const [isSearchingGeo, setSearchingGeo] = useState(false)
   const [filterResult, setFilterResult] = useState([])
-  const router = useRouter()
-
-  function handleChooseProvince(value, geo) {
-    let nextPage = `/${value}`
-
-    if (geo) {
-      nextPage += `?geo=${geo.lat},${geo.long}`
-    }
-
-    router.push(nextPage)
-  }
 
   function handleKeyPress(e) {
     if (e.code === 'Enter' && filterResult.length > 0) {
       const selectedProvince = filterResult[0]
-      handleChooseProvince(selectedProvince.value)
+      onChooseProvince(selectedProvince)
+      setInputFocus(false)
     }
   }
 
   function handleOnChange(e) {
     const inputValue = e.target.value
     if (inputValue) {
+      setInputFocus(true)
       const filteredProvince = provinceList
         .filter((province) =>
           province.name.toLowerCase().includes(inputValue.toLowerCase())
@@ -81,91 +68,62 @@ function SearchProvince() {
     setInputProvince(inputValue)
   }
 
-  function handleSearchGeo() {
-    setSearchingGeo(true)
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords
-        const nearestProvince = getNearestProvince(latitude, longitude)
-        handleChooseProvince(nearestProvince, {
-          lat: latitude,
-          long: longitude,
-        })
-      },
-      (err) => {
-        setSearchingGeo(false)
-      }
-    )
-  }
-
-  function toMapPage() {
-    router.push('/map')
-  }
+  useEffect(() => {
+    if (value) {
+      setInputProvince(value)
+    }
+  }, [value])
 
   return (
-    <VStack w="100%" spacing="8">
-      <Heading as="h1" fontSize="3xl" textAlign="center">
-        Ketersediaan Tempat Tidur Rumah Sakit
-      </Heading>
-      <Box w="100%" position="relative">
-        <Box w="full" textAlign="center" mb={4}>
-          <Button w={['full', 'auto']} onClick={toMapPage}>
-            Cari Menggunakan Peta
-            <span aria-label="Cari menggunakan peta" style={{ marginLeft: 6 }}>
-              🗺
-            </span>
-          </Button>
-        </Box>
-
-        <HStack spacing="2">
-          <InputGroup>
-            <InputLeftElement
-              pointerEvents="none"
-              // eslint-disable-next-line react/no-children-prop
-              children={<SearchIcon color="gray.300" />}
-            />
-            <Input
-              fontSize="lg"
-              isDisabled={provinceList.length < 1 || isSearchingGeo}
-              placeholder="Masukkan nama provinsi"
-              value={inputProvince}
-              onKeyPress={handleKeyPress}
-              onChange={handleOnChange}
-            />
-          </InputGroup>
-          <Button
-            disabled={isSearchingGeo}
-            onClick={handleSearchGeo}
-            aria-label="Cari provinsi terdekat"
-          >
-            📍
-          </Button>
-        </HStack>
-
-        <Box
-          w="100%"
-          borderRadius="md"
-          background="white"
-          shadow="lg"
-          position="absolute"
-          left="0"
-          mt="2"
-          overflow="hidden"
+    <Box onBlur={() => setTimeout(() => setInputFocus(false), 100)}>
+      <HStack spacing="2">
+        <InputGroup onFocus={() => setInputFocus(true)}>
+          <InputLeftElement
+            pointerEvents="none"
+            // eslint-disable-next-line react/no-children-prop
+            children={<SearchIcon color="gray.300" />}
+          />
+          <Input
+            fontSize="lg"
+            isDisabled={provinceList.length < 1 || disabled}
+            placeholder="Masukkan nama provinsi"
+            value={inputProvince}
+            onKeyPress={handleKeyPress}
+            onChange={handleOnChange}
+          />
+        </InputGroup>
+        <Button
+          disabled={disabled}
+          onClick={onSearchGeo}
+          aria-label="Cari provinsi terdekat"
         >
-          {filterResult.length > 0 && (
-            <List>
-              {filterResult.map((province) => (
-                <ProvinceItem
-                  key={province.value}
-                  province={province}
-                  onClick={handleChooseProvince}
-                />
-              ))}
-            </List>
-          )}
-        </Box>
+          📍
+        </Button>
+      </HStack>
+
+      <Box
+        w="100%"
+        borderRadius="md"
+        background="white"
+        shadow="lg"
+        position="absolute"
+        left="0"
+        mt="2"
+        overflow="hidden"
+      >
+        {filterResult.length > 0 && inputFocus && (
+          <List>
+            {filterResult.map((province) => (
+              <ProvinceItem
+                key={province.value}
+                province={province}
+                onClick={onChooseProvince}
+              />
+            ))}
+          </List>
+        )}
       </Box>
-    </VStack>
+    </Box>
   )
 }
 

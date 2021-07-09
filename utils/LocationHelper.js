@@ -1,6 +1,12 @@
 import { provincesWithCities } from './constants'
 
 /**
+ * @typedef {Object} Province
+ * @property {string} value
+ * @property {string} name
+ */
+
+/**
  * @param {number} lat
  * @param {number} lon
  * @returns {Array}
@@ -32,11 +38,11 @@ export function getNearestProvinces(lat, lon) {
 /**
  * @param {number} lat
  * @param {number} lon
- * @returns {string}
+ * @returns {Province}
  */
 export function getNearestProvince(lat, lon) {
   const nearestProvinces = getNearestProvinces(lat, lon)
-  return nearestProvinces[0].value
+  return nearestProvinces[0]
 }
 
 function deg2rad(deg) {

@@ -7,11 +7,11 @@ import { NextSeo } from 'next-seo'
 import SEO from 'next-seo.config'
 import { Box, Button, VStack, Flex, Text } from '@chakra-ui/react'
 import HospitalCard from '@/components/HospitalCard'
+import SearchProvince from '@/components/SearchProvince'
 
 import mapboxgl from '!mapbox-gl'
 
 import useHospitalDataByProvince from '@/hooks/useHospitalDataByProvince'
-import Select from 'react-select'
 import { provincesWithCities } from '@/utils/constants'
 import { getNearestProvince } from '@/utils/LocationHelper'
 
@@ -57,6 +57,10 @@ export default function Map() {
     updateMap()
   }, [hospitalList])
 
+  const handleChooseProvince = (province) => [
+    setProvince({ value: province.value, label: province.name }),
+  ]
+
   const handleSearchGeo = () => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -67,12 +71,10 @@ export default function Map() {
           lon: longitude,
         })
         const nearestProvince = getNearestProvince(latitude, longitude)
-        const province = provincesWithCities.find(
-          (item) => item.province.value === nearestProvince
-        )
+
         setProvince({
-          label: province.province.name,
-          value: province.province.value,
+          label: nearestProvince.name,
+          value: nearestProvince.value,
         })
         map.current.flyTo({
           center: {
@@ -217,54 +219,35 @@ export default function Map() {
           right="1rem"
           width={{ md: '400px' }}
         >
-          <Select
-            placeholder="Pilih Provinsi"
-            options={makeProvinceOptions()}
-            value={province}
-            onChange={(item) => {
-              setProvince(item)
-            }}
+          <SearchProvince
+            onChooseProvince={handleChooseProvince}
+            onSearchGeo={handleSearchGeo}
+            disabled={isLoading}
+            value={province.label}
           />
         </Box>
 
-        <Flex
+        <Box
           position="absolute"
           bottom="1rem"
           left="1rem"
           right="1rem"
-          flexDir="column"
+          borderRadius="8px"
+          padding="1rem"
+          boxShadow="0 2px 8px 0 rgb(48 49 53 / 16%)"
+          background="white"
+          onClick={(e) => {
+            e.preventDefault()
+            setPopupHospitalVisibility(true)
+          }}
         >
-          <Button
-            alignSelf="flex-end"
-            justifySelf="flex-end"
-            background="white"
-            padding="1rem"
-            boxShadow="0 2px 8px 0 rgb(48 49 53 / 16%)"
-            borderRadius="8px"
-            marginBottom="1rem"
-            onClick={handleSearchGeo}
-          >
-            📍
-          </Button>
-          <Box
-            borderRadius="8px"
-            padding="1rem"
-            boxShadow="0 2px 8px 0 rgb(48 49 53 / 16%)"
-            background="white"
-            onClick={(e) => {
-              e.preventDefault()
-              setPopupHospitalVisibility(true)
-            }}
-          >
-            <Text onClick={() => setPopupHospitalVisibility(true)}>
-              Jumlah Rumah Sakit:{' '}
-              {isLoading ? <Spinner /> : hospitalList?.length}{' '}
-              <span style={{ color: '#F87A26', cursor: 'pointer' }}>
-                (Daftar Rumah Sakit)
-              </span>
-            </Text>
-          </Box>
-        </Flex>
+          <Text onClick={() => setPopupHospitalVisibility(true)}>
+            Jumlah Rumah Sakit: {isLoading ? <Spinner /> : hospitalList?.length}{' '}
+            <span style={{ color: '#F87A26', cursor: 'pointer' }}>
+              (Daftar Rumah Sakit)
+            </span>
+          </Text>
+        </Box>
       </Box>
 
       <BottomSheet
@@ -274,14 +257,16 @@ export default function Map() {
         <Box padding="1rem" color="black">
           <VStack align="start" spacing="4">
             {!isLoading ? (
-              hospitalList.map((hospital) => (
-                <HospitalCard
-                  onLocationClick={() => handleHospitalClick(hospital)}
-                  onClick={() => handleHospitalClick(hospital)}
-                  key={hospital.hospital_code}
-                  hospital={hospital}
-                />
-              ))
+              hospitalList
+                .filter((hospital) => hospital.available_bed > 0)
+                .map((hospital) => (
+                  <HospitalCard
+                    onLocationClick={() => handleHospitalClick(hospital)}
+                    onClick={() => handleHospitalClick(hospital)}
+                    key={hospital.hospital_code}
+                    hospital={hospital}
+                  />
+                ))
             ) : (
               <Box w="100%" textAlign="center">
                 <Spinner size="lg" />

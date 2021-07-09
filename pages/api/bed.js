@@ -271,7 +271,7 @@ export default async function getBedAvailability(req, res) {
   }
 
   try {
-    const data = await redis.fetch(`bed:${prov}`, fetcher, 60 * 5, {
+    const data = await redis.fetch(`bed:${prov}`, fetcher, 60 * 100, {
       revalidate: revalidate === 'true',
     })
 

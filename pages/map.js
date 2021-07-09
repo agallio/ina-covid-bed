@@ -5,7 +5,7 @@ import 'react-spring-bottom-sheet/dist/style.css'
 import { BottomSheet } from 'react-spring-bottom-sheet'
 import { NextSeo } from 'next-seo'
 import SEO from 'next-seo.config'
-import { Box, Button, VStack, Flex, Text } from '@chakra-ui/react'
+import { Box, VStack, HStack, Text } from '@chakra-ui/react'
 import HospitalCard from '@/components/HospitalCard'
 import SearchProvince from '@/components/SearchProvince'
 
@@ -13,7 +13,7 @@ import mapboxgl from '!mapbox-gl'
 
 import useHospitalDataByProvince from '@/hooks/useHospitalDataByProvince'
 import { provincesWithCities } from '@/utils/constants'
-import { getNearestProvince } from '@/utils/LocationHelper'
+import { getNearestProvinces } from '@/utils/LocationHelper'
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX
 
@@ -23,6 +23,7 @@ export default function Map() {
   const [lng] = useState(115.212631)
   const [lat] = useState(-8.670458)
   const [zoom] = useState(9)
+  const [alternativeProvinces, setAlternativeProvinces] = useState([])
 
   const [province, setProvince] = useState({
     value: 'jakarta',
@@ -57,9 +58,10 @@ export default function Map() {
     updateMap()
   }, [hospitalList])
 
-  const handleChooseProvince = (province) => [
-    setProvince({ value: province.value, label: province.name }),
-  ]
+  const handleChooseProvince = (province) => {
+    setProvince({ value: province.value, label: province.name })
+    setAlternativeProvinces([])
+  }
 
   const handleSearchGeo = () => {
     navigator.geolocation.getCurrentPosition(
@@ -70,12 +72,13 @@ export default function Map() {
           lat: latitude,
           lon: longitude,
         })
-        const nearestProvince = getNearestProvince(latitude, longitude)
+        const nearestProvinces = getNearestProvinces(latitude, longitude)
 
         setProvince({
-          label: nearestProvince.name,
-          value: nearestProvince.value,
+          label: nearestProvinces[0].name,
+          value: nearestProvinces[0].value,
         })
+        setAlternativeProvinces(nearestProvinces.slice(1, 3))
         map.current.flyTo({
           center: {
             lat: latitude,
@@ -225,6 +228,28 @@ export default function Map() {
             disabled={isLoading}
             value={province.label}
           />
+
+          {Boolean(alternativeProvinces.length) && (
+            <HStack
+              fontSize={['xs', 'sm']}
+              mt="1rem"
+              w="100%"
+              spacing="4"
+              color="gray.500"
+            >
+              <Text>Provinsi sekitar:</Text>
+              {alternativeProvinces.map((alternative) => (
+                <Text
+                  key={alternative.value}
+                  onClick={() => handleChooseProvince(alternative)}
+                  color="blue.600"
+                  cursor="pointer"
+                >
+                  {alternative.name}
+                </Text>
+              ))}
+            </HStack>
+          )}
         </Box>
 
         <Box

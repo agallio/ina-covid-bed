@@ -160,7 +160,7 @@ export default function Map() {
   }
 
   return (
-    <div position="relative">
+    <div position="relative" style={{ color: 'black' }}>
       <NextSeo
         {...SEO({
           pageTitle: `${city.label} - Peta Ketersediaan Tempat Tidur`,
@@ -216,7 +216,7 @@ export default function Map() {
         open={popupHospital}
         onDismiss={() => setPopupHospitalVisibility(false)}
       >
-        <div style={{ padding: '1rem' }}>
+        <div style={{ padding: '1rem', color: 'black' }}>
           {hospitalList?.map((hospital) => (
             <div
               style={{

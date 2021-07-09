@@ -37,17 +37,19 @@ export default function HospitalCard(props) {
           </Text>
         </VStack>
         <VStack align="center" justify="center">
-          <Box
-            w={['24', '28']}
-            p={2}
-            textAlign="center"
-            bgColor={hospital.available_bed > 0 ? 'gray.200' : 'red.200'}
-            borderRadius="md"
-          >
-            <Text fontSize={['sm', 'md']} fontWeight="bold">
-              {hospital.distance.toFixed(2)} KM
-            </Text>
-          </Box>
+          {hospital.distance && (
+            <Box
+              w={['24', '28']}
+              p={2}
+              textAlign="center"
+              bgColor={hospital.available_bed > 0 ? 'gray.200' : 'red.200'}
+              borderRadius="md"
+            >
+              <Text fontSize={['sm', 'md']} fontWeight="bold">
+                {hospital.distance.toFixed(2)} KM
+              </Text>
+            </Box>
+          )}
           {hospital.available_bed > 0 ? (
             <>
               <Text size="sm">Tersedia:</Text>

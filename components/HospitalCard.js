@@ -28,6 +28,9 @@ export default function HospitalCard(props) {
   const bgNotAvailable = useColorModeValue('red.100', 'red.700')
   const bgDistanceAvailable = useColorModeValue('gray.200', 'gray.600')
   const bgDistanceNotAvailable = useColorModeValue('red.200', 'red.600')
+
+  const hotlineSplitted = hospital.hotline && hospital.hotline.split(',')
+
   return (
     <Box
       w="100%"
@@ -93,21 +96,40 @@ export default function HospitalCard(props) {
       {hospital.available_bed > 0 && (
         <Box mt="4" pt="4" borderTop="1px solid" borderTopColor="gray.300">
           <Box display="flex" flexDirection={['column', 'row']}>
-            <Button
-              as="a"
-              w="full"
-              mb={[2, 0]}
-              mr={{ base: '2' }}
-              size="sm"
-              leftIcon={hospital.hotline ? <PhoneIcon /> : null}
-              colorScheme="blue"
-              disabled={!hospital.hotline || hospital.hotline.length < 8}
-              href={`tel:${hospital.hotline}`}
-            >
-              {!hospital.hotline || hospital.hotline.length < 8
-                ? 'Hotline tidak tersedia'
-                : hospital.hotline}
-            </Button>
+            {hotlineSplitted.length > 1 ? (
+              hotlineSplitted.map((item) => (
+                <Button
+                  key={item}
+                  as="a"
+                  w="full"
+                  mb={[2, 0]}
+                  mr={{ base: '2' }}
+                  size="sm"
+                  leftIcon={item.length ? <PhoneIcon /> : null}
+                  colorScheme="blue"
+                  disabled={!item || item.length < 8}
+                  href={`tel:${item}`}
+                >
+                  {item}
+                </Button>
+              ))
+            ) : (
+              <Button
+                as="a"
+                w="full"
+                mb={[2, 0]}
+                mr={{ base: '2' }}
+                size="sm"
+                leftIcon={hospital.hotline ? <PhoneIcon /> : null}
+                colorScheme="blue"
+                disabled={!hospital.hotline || hospital.hotline.length < 8}
+                href={`tel:${hospital.hotline}`}
+              >
+                {!hospital.hotline || hospital.hotline.length < 8
+                  ? 'Hotline tidak tersedia'
+                  : hospital.hotline}
+              </Button>
+            )}
 
             <Button
               w="full"

@@ -14,7 +14,15 @@ export default function useHospitalDataByProvince(province, geo) {
   }
 
   if (apiResult?.data) {
-    hospitalList = apiResult.data
+    hospitalList = apiResult.data.sort((a, b) => {
+      if (a.available_bed === 0) {
+        return 1
+      } else if (b.available_bed === 0) {
+        return -1
+      }
+
+      return b.available_bed > a.available_bed ? 1 : -1
+    })
 
     if (geo) {
       // map distance so we calculate once

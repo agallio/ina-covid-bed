@@ -80,26 +80,77 @@ export default async function getBedAvailability(req, res) {
       bedAvailable.push(data.first().text())
     })
 
-    $('p').filter((i, el) => {
-      const data = $(el)
+    // Address
+    $('div')
+      .find('.col-md-7')
+      .filter((i, el) => {
+        const data = $(el)
 
-      // Address
-      if (
-        data
-          .first()
-          .text()
-          .split(' ')
-          .filter((i) => i !== '')[0] !== '\n'
-      ) {
-        address.push(
+        if (
           data
             .first()
             .text()
             .split(' ')
             .filter((i) => i !== '')
             .join(' ')
-        )
-      }
+            .split('\n')
+        ) {
+          const addressData = data
+            .first()
+            .text()
+            .split(' ')
+            .filter((i) => i !== '')
+            .join(' ')
+            .split('\n')[2]
+            .trim()
+
+          address.push(addressData)
+        }
+      })
+
+    // Hotline
+    $('div')
+      .find('.card-footer')
+      .find('span')
+      .filter((i, el) => {
+        const data = $(el)
+        const hotlineSelector = data.first().text()
+        const hotlineSelectorSplitted = hotlineSelector.split('/')
+
+        if (hotlineSelector.includes('tidak tersedia')) {
+          hotline.push('')
+        } else if (hotlineSelectorSplitted.length > 1) {
+          hotline.push(hotlineSelectorSplitted.join(',').replace(/ /g, ''))
+        } else {
+          hotline.push(hotlineSelector.replace(/ /g, ''))
+        }
+      })
+
+    $('div')
+      .find('.card-footer')
+      .find('a')
+      .filter((i, el) => {
+        const data = $(el)
+        if (
+          data
+            .first()
+            .text()
+            .split(' ')
+            .filter((i) => i !== '')[0]
+            .includes('http')
+        ) {
+          const href = data
+            .first()
+            .text()
+            .split(' ')
+            .filter((i) => i !== '')[0]
+          const { query } = parseUrl(href)
+          bedDetailLink.push({ link: href, hospital_code: query.kode_rs })
+        }
+      })
+
+    $('p').filter((i, el) => {
+      const data = $(el)
 
       // Updated At
       if (
@@ -199,52 +250,6 @@ export default async function getBedAvailability(req, res) {
           )
         }
       }
-
-      // Hotline
-      if (
-        data
-          .first()
-          .text()
-          .split(' ')
-          .filter((i) => i !== '')
-          .includes('konfirmasi')
-      ) {
-        if (
-          data
-            .first()
-            .text()
-            .split(' ')
-            .filter((i) => i !== '')
-            .filter((i) => i !== '\n')[0] === 'hotline'
-        ) {
-          hotline.push('')
-        }
-
-        if (
-          data
-            .first()
-            .text()
-            .split(' ')
-            .filter((i) => i !== '')
-            .filter((i) => i !== '\n')[0] === 'konfirmasi'
-        ) {
-          hotline.push(
-            data
-              .first()
-              .text()
-              .split(' ')
-              .filter((i) => i !== '')
-              .filter((i) => i !== '\n')[2]
-          )
-        }
-      }
-    })
-
-    $('a').filter((i, el) => {
-      const data = $(el)
-      const link = data.attr('href')
-      const { query } = parseUrl(link)
-      bedDetailLink.push({ link, hospital_code: query.kode_rs })
     })
 
     hospitalNameArr.shift()

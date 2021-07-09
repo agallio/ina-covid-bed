@@ -33,6 +33,12 @@ export default function useHospitalDataByProvince(province, geo) {
           }
         })
         .sort((a, b) => {
+          if (a.available_bed === 0) {
+            return 1
+          } else if (b.available_bed === 0) {
+            return -1
+          }
+
           return a.distance > b.distance ? 1 : -1
         })
     }

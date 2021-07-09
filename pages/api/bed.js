@@ -3,6 +3,7 @@ import cheerio from 'cheerio'
 import { parseUrl } from 'query-string'
 
 import { provincesWithCities } from '@/utils/constants'
+import redis from '@/utils/RedisHelper'
 
 export default async function getBedAvailability(req, res) {
   if (req.method !== 'GET') {
@@ -13,7 +14,7 @@ export default async function getBedAvailability(req, res) {
   }
 
   const {
-    query: { prov },
+    query: { prov, revalidate },
   } = req
 
   if (!prov) {
@@ -22,6 +23,15 @@ export default async function getBedAvailability(req, res) {
       data: null,
       error: `Bad request. Add 'prov' query string with Indonesia provinces.`,
       province: provincesWithCities.map((pwc) => pwc.province.value),
+    })
+    return
+  }
+
+  if (revalidate && revalidate !== 'true' && revalidate !== 'false') {
+    res.status(400).json({
+      status: 400,
+      data: null,
+      error: `Bad request. The 'revalidate' value should only be either 'true' or 'false'`,
     })
     return
   }
@@ -42,7 +52,7 @@ export default async function getBedAvailability(req, res) {
   const provKey = provinceWithCity.province.key
   const url = `http://yankes.kemkes.go.id/app/siranap/rumah_sakit?jenis=1&propinsi=${provKey}`
 
-  try {
+  const fetcher = async () => {
     const { data } = await axios.get(url)
     const $ = cheerio.load(data)
     const hospitalNameArr = []
@@ -239,7 +249,11 @@ export default async function getBedAvailability(req, res) {
 
     hospitalNameArr.shift()
 
-    const hospitalArray = hospitalNameArr.map((hos, idx) => ({
+    // Don't delete this.
+    // This will only logged to console if there's new data.
+    console.log(`Fetched data at ${new Date().toISOString()}`)
+
+    return hospitalNameArr.map((hos, idx) => ({
       name: hos,
       address: address[idx],
       available_bed: Number(bedAvailable[idx]) || 0,
@@ -249,9 +263,15 @@ export default async function getBedAvailability(req, res) {
       hospital_code: bedDetailLink[idx].hospital_code,
       updated_at_minutes: updatedAt[idx],
     }))
+  }
 
-    if (hospitalArray.length === 0) {
-      res.json({ status: 200, data: hospitalArray, error: null })
+  try {
+    const data = await redis.fetch(`bed:${prov}`, fetcher, 60 * 5, {
+      revalidate: revalidate === 'true',
+    })
+
+    if (data.length === 0) {
+      res.json({ status: 200, data, error: null })
       return
     }
 
@@ -259,7 +279,7 @@ export default async function getBedAvailability(req, res) {
     //   (hos) => hos.available_bed > 0
     // )
 
-    const filteredAvailableBedWithLocation = hospitalArray.map((hos) => {
+    const filteredAvailableBedWithLocation = data.map((hos) => {
       const url = `http://yankes.kemkes.go.id/app/siranap/rumah_sakit/${hos.hospital_code}`
       return axios
         .get(url)

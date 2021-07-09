@@ -113,20 +113,22 @@ export default function Map() {
 
     const id = Math.random() * 100000000000
 
-    const features = hospitalList.map((hospital) => ({
-      type: 'Feature',
-      properties: {
-        description: `<strong>${hospital.name}</strong>
+    const features = hospitalList
+      .filter((hospital) => hospital.available_bed > 0)
+      .map((hospital) => ({
+        type: 'Feature',
+        properties: {
+          description: `<strong>${hospital.name}</strong>
         <p>Tempat tidur tersedia: ${hospital.available_bed} | Antrian: ${hospital.bed_queue}</p>
         <p>Hotline: ${hospital.hotline} | <a href="${hospital.bed_detail_link}" target="_blank">Detail</a></p>
         <p style="margin-top: .5rem">${hospital.address}</p>`,
-        icon: 'hospital-15',
-      },
-      geometry: {
-        type: 'Point',
-        coordinates: [parseFloat(hospital.lon), parseFloat(hospital.lat)],
-      },
-    }))
+          icon: 'hospital-15',
+        },
+        geometry: {
+          type: 'Point',
+          coordinates: [parseFloat(hospital.lon), parseFloat(hospital.lat)],
+        },
+      }))
     map.current.addSource(`places-${id}`, {
       // This GeoJSON contains features that include an "icon"
       // property. The value of the "icon" property corresponds

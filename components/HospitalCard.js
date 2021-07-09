@@ -29,6 +29,7 @@ export default function HospitalCard(props) {
   const bgDistanceAvailable = useColorModeValue('gray.200', 'gray.600')
   const bgDistanceNotAvailable = useColorModeValue('red.200', 'red.600')
 
+<<<<<<< HEAD
   const hotlineSplitted = hospital.hotline && hospital.hotline.split(',')
   const locationAction = {
     ...(onLocationClick
@@ -40,6 +41,8 @@ export default function HospitalCard(props) {
         }),
   }
 
+=======
+>>>>>>> e7b7987 (fix: location button click action)
   return (
     <Box
       w="100%"
@@ -141,22 +144,36 @@ export default function HospitalCard(props) {
               </Button>
             )}
 
-            <Button
-              w="full"
-              as="a"
-              mb={[2, 0]}
-              mr={{ base: '2' }}
-              target="_blank"
-              rel="noreferrer"
-              size="sm"
-              {...locationAction}
-            >
-              <span style={{ marginRight: 5 }} aria-label="peta">
-                📍
-              </span>{' '}
-              Lihat Lokasi
-            </Button>
-
+            {typeof onLocationClick === 'function' ? (
+              <Button
+                w="full"
+                mb={[2, 0]}
+                mr={{ base: '2' }}
+                size="sm"
+                onClick={onLocationClick}
+              >
+                <span style={{ marginRight: 5 }} aria-label="peta">
+                  📍
+                </span>{' '}
+                Lihat Lokasi
+              </Button>
+            ) : (
+              <Button
+                w="full"
+                as="a"
+                mb={[2, 0]}
+                mr={{ base: '2' }}
+                target="_blank"
+                rel="noreferrer"
+                size="sm"
+                href={generateGoogleMapsLink(hospital.name)}
+              >
+                <span style={{ marginRight: 5 }} aria-label="peta">
+                  📍
+                </span>{' '}
+                Lihat Lokasi
+              </Button>
+            )}
             <Button
               w="full"
               as="a"

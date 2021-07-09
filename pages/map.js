@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useMemo } from 'react'
 import { Spinner } from '@chakra-ui/react'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import 'react-spring-bottom-sheet/dist/style.css'
@@ -6,11 +6,11 @@ import { BottomSheet } from 'react-spring-bottom-sheet'
 import { NextSeo } from 'next-seo'
 import SEO from 'next-seo.config'
 import { Box, VStack, HStack, Text } from '@chakra-ui/react'
-import HospitalCard from '@/components/HospitalCard'
-import SearchProvince from '@/components/SearchProvince'
 
 import mapboxgl from '!mapbox-gl'
 
+import HospitalCard from '@/components/HospitalCard'
+import SearchProvince from '@/components/SearchProvince'
 import useHospitalDataByProvince from '@/hooks/useHospitalDataByProvince'
 import { provincesWithCities } from '@/utils/constants'
 import { getNearestProvinces } from '@/utils/LocationHelper'
@@ -105,6 +105,11 @@ export default function Map() {
     })
   }
 
+  const availableHospital = useMemo(
+    () => hospitalList?.filter((hospital) => hospital.available_bed > 0) || [],
+    [hospitalList]
+  )
+
   const updateMap = () => {
     if (!hospitalList?.length || !map.current.isStyleLoaded()) return
 
@@ -118,22 +123,20 @@ export default function Map() {
 
     const id = Math.random() * 100000000000
 
-    const features = hospitalList
-      .filter((hospital) => hospital.available_bed > 0)
-      .map((hospital) => ({
-        type: 'Feature',
-        properties: {
-          description: `<strong>${hospital.name}</strong>
+    const features = hospitalList.map((hospital) => ({
+      type: 'Feature',
+      properties: {
+        description: `<strong>${hospital.name}</strong>
         <p>Tempat tidur tersedia: ${hospital.available_bed} | Antrian: ${hospital.bed_queue}</p>
         <p>Hotline: ${hospital.hotline} | <a href="${hospital.bed_detail_link}" target="_blank">Detail</a></p>
         <p style="margin-top: .5rem">${hospital.address}</p>`,
-          icon: 'hospital-15',
-        },
-        geometry: {
-          type: 'Point',
-          coordinates: [parseFloat(hospital.lon), parseFloat(hospital.lat)],
-        },
-      }))
+        icon: 'hospital-15',
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [parseFloat(hospital.lon), parseFloat(hospital.lat)],
+      },
+    }))
     map.current.addSource(`places-${id}`, {
       // This GeoJSON contains features that include an "icon"
       // property. The value of the "icon" property corresponds
@@ -267,7 +270,11 @@ export default function Map() {
           }}
         >
           <Text onClick={() => setPopupHospitalVisibility(true)}>
-            Jumlah Rumah Sakit: {isLoading ? <Spinner /> : hospitalList?.length}{' '}
+            {isLoading ? (
+              <Spinner />
+            ) : (
+              `${availableHospital.length} rumah sakit tersedia dari ${hospitalList?.length} `
+            )}
             <span style={{ color: '#F87A26', cursor: 'pointer' }}>
               (Daftar Rumah Sakit)
             </span>
@@ -282,16 +289,14 @@ export default function Map() {
         <Box padding="1rem" color="black">
           <VStack align="start" spacing="4">
             {!isLoading ? (
-              hospitalList
-                .filter((hospital) => hospital.available_bed > 0)
-                .map((hospital) => (
-                  <HospitalCard
-                    onLocationClick={() => handleHospitalClick(hospital)}
-                    onClick={() => handleHospitalClick(hospital)}
-                    key={hospital.hospital_code}
-                    hospital={hospital}
-                  />
-                ))
+              hospitalList.map((hospital) => (
+                <HospitalCard
+                  onLocationClick={() => handleHospitalClick(hospital)}
+                  onClick={() => handleHospitalClick(hospital)}
+                  key={hospital.hospital_code}
+                  hospital={hospital}
+                />
+              ))
             ) : (
               <Box w="100%" textAlign="center">
                 <Spinner size="lg" />

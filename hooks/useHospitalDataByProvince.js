@@ -5,7 +5,10 @@ import { getDistanceFromLatLonInKm } from '@/utils/LocationHelper'
 const fetcher = (...args) => fetch(...args).then((res) => res.json())
 
 export default function useHospitalDataByProvince(province, geo) {
-  const { data: apiResult } = useSWR(`/api/bed?prov=${province}`, fetcher)
+  const { data: apiResult } = useSWR(
+    `/api/bed?prov=${province}&revalidate=false`,
+    fetcher
+  )
   let hospitalList = null
   let bedFull = false
 

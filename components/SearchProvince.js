@@ -44,7 +44,8 @@ function SearchProvince({ onChooseProvince, onSearchGeo, disabled, value }) {
   const [inputProvince, setInputProvince] = useState('')
   const [filterResult, setFilterResult] = useState([])
 
-  const dynamicInputColor = useColorModeValue('gray.300', 'white')
+  const dynamicInputColor = useColorModeValue('gray.900', 'white')
+  const dynamicPlaceholderColor = useColorModeValue('gray.500', 'gray.400')
 
   function handleKeyPress(e) {
     if (e.code === 'Enter' && filterResult.length > 0) {
@@ -94,6 +95,7 @@ function SearchProvince({ onChooseProvince, onSearchGeo, disabled, value }) {
             onKeyPress={handleKeyPress}
             onChange={handleOnChange}
             color={dynamicInputColor}
+            _placeholder={{ color: dynamicPlaceholderColor }}
           />
         </InputGroup>
         <Button

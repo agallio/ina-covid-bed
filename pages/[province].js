@@ -10,6 +10,7 @@ import {
   HStack,
   Text,
   Spinner,
+  useColorModeValue,
 } from '@chakra-ui/react'
 
 import useHospitalDataByProvince from '@/hooks/useHospitalDataByProvince'
@@ -31,6 +32,8 @@ function ProvincePage(props) {
       .slice(0, 3)
       .filter((p) => p.value !== province)
   }
+
+  const dynamicLinkColor = useColorModeValue('blue.600', 'blue.400')
 
   const isLoading = !Boolean(hospitalList)
 
@@ -56,7 +59,7 @@ function ProvincePage(props) {
       />
 
       <Container py="10">
-        <Text color="blue.600" fontSize="sm">
+        <Text color={dynamicLinkColor} fontSize="sm">
           <Link href="/" passHref>
             <ChakraLink>‹ Ganti Provinsi</ChakraLink>
           </Link>
@@ -76,7 +79,7 @@ function ProvincePage(props) {
             >
               <Text>Provinsi sekitar:</Text>
               {alternativeProvinces.map((alternative) => (
-                <Text key={alternative.value} color="blue.600">
+                <Text key={alternative.value} color={dynamicLinkColor}>
                   <Link
                     passHref
                     href={`/${alternative.value}?geo=${lat},${lon}`}

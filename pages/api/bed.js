@@ -55,30 +55,68 @@ export default async function getBedAvailability(req, res) {
   const fetcher = async () => {
     const { data } = await axios.get(url)
     const $ = cheerio.load(data)
-    const hospitalNameArr = []
+    const hospitalDetail = []
     const bedAvailable = []
-    const address = []
     const updatedAt = []
     const bedQueue = []
     const hotline = []
     const bedDetailLink = []
 
-    $('h5').filter((i, el) => {
-      const data = $(el)
-      hospitalNameArr.push(
-        data
+    $('div')
+      .find('.col-md-5.text-right')
+      .filter((i, el) => {
+        const data = $(el)
+        const getBedInfo = data
+          .find(':nth-child(2)')
           .first()
           .text()
           .split(' ')
           .filter((i) => i !== '')
           .join(' ')
-      )
-    })
+          .split('\n')[1]
+          .trim()
+          .split(' ')
+        const getBedQueue = data
+          .find(':nth-child(3)')
+          .first()
+          .text()
+          .split(' ')
+          .filter((i) => i !== '')
+          .join(' ')
+          .split('\n')[1]
+          .trim()
+          .split(' ')
+        const getLastUpdatedAt = data
+          .find(':nth-child(4)')
+          .first()
+          .text()
+          .split(' ')
+          .filter((i) => i !== '')
+          .join(' ')
+          .split('\n')[1]
+          .trim()
+          .split(' ')
 
-    $('b').filter((i, el) => {
-      const data = $(el)
-      bedAvailable.push(data.first().text())
-    })
+        if (getBedInfo[0] === 'Bed') {
+          bedAvailable.push(0)
+        } else if (getBedInfo[0] === 'Tersedia') {
+          bedAvailable.push(Number(getBedInfo[1]))
+        }
+
+        if (getBedQueue[0] === 'tanpa') {
+          bedQueue.push(0)
+        } else if (getBedQueue[0] === 'dengan') {
+          bedQueue.push(Number(getBedQueue[2]))
+        }
+
+        if (getLastUpdatedAt[1] === 'kurang') {
+          updatedAt.push(0)
+        } else if (getLastUpdatedAt[2] === 'menit') {
+          updatedAt.push(Number(getLastUpdatedAt[1]))
+        } else if (getLastUpdatedAt[2] === 'jam') {
+          updatedAt.push(Number(getLastUpdatedAt[1]) * 60)
+        }
+      })
 
     // Address
     $('div')
@@ -95,7 +133,8 @@ export default async function getBedAvailability(req, res) {
             .join(' ')
             .split('\n')
         ) {
-          const addressData = data
+          const hospitalName = data.find('h5').first().text()
+          const hospitalAddress = data
             .first()
             .text()
             .split(' ')
@@ -104,7 +143,7 @@ export default async function getBedAvailability(req, res) {
             .split('\n')[2]
             .trim()
 
-          address.push(addressData)
+          hospitalDetail.push({ name: hospitalName, address: hospitalAddress })
         }
       })
 
@@ -144,123 +183,24 @@ export default async function getBedAvailability(req, res) {
             .text()
             .split(' ')
             .filter((i) => i !== '')[0]
+          const linkSplitted = href.split('\n')
+          const newLink = linkSplitted[0].split('"')[0]
           const { query } = parseUrl(href)
-          bedDetailLink.push({ link: href, hospital_code: query.kode_rs })
+          bedDetailLink.push({ link: newLink, hospital_code: query.kode_rs })
         }
       })
-
-    $('p').filter((i, el) => {
-      const data = $(el)
-
-      // Updated At
-      if (
-        data
-          .first()
-          .text()
-          .split(' ')
-          .filter((i) => i !== '')
-          .includes('diupdate')
-      ) {
-        if (
-          data
-            .first()
-            .text()
-            .split(' ')
-            .filter((i) => i !== '')
-            .reverse()[5] === 'kurang'
-        ) {
-          updatedAt.push(0)
-        }
-
-        if (
-          data
-            .first()
-            .text()
-            .split(' ')
-            .filter((i) => i !== '')
-            .reverse()[2] === 'menit'
-        ) {
-          updatedAt.push(
-            Number(
-              data
-                .first()
-                .text()
-                .split(' ')
-                .filter((i) => i !== '')
-                .reverse()[3]
-            )
-          )
-        }
-
-        if (
-          data
-            .first()
-            .text()
-            .split(' ')
-            .filter((i) => i !== '')
-            .reverse()[2] === 'jam'
-        ) {
-          updatedAt.push(
-            Number(
-              data
-                .first()
-                .text()
-                .split(' ')
-                .filter((i) => i !== '')
-                .reverse()[3]
-            ) * 60
-          )
-        }
-      }
-
-      // Bed Queue
-      if (
-        data
-          .first()
-          .text()
-          .split(' ')
-          .filter((i) => i !== '')
-          .includes('antrian')
-      ) {
-        if (
-          data
-            .first()
-            .text()
-            .split(' ')
-            .filter((i) => i !== '')[1] === 'tanpa'
-        ) {
-          bedQueue.push(0)
-        }
-
-        if (
-          data
-            .first()
-            .text()
-            .split(' ')
-            .filter((i) => i !== '')[1] === 'dengan'
-        ) {
-          bedQueue.push(
-            Number(
-              data
-                .first()
-                .text()
-                .split(' ')
-                .filter((i) => i !== '')[3]
-            )
-          )
-        }
-      }
-    })
-
-    hospitalNameArr.shift()
 
     // Don't delete this.
     // This will only logged to console if there's new data.
     console.log(`Fetched data at ${new Date().toISOString()}`)
 
-    return hospitalNameArr.map((hos, idx) => ({
-      name: hos,
-      address: address[idx],
+    // const filteredAvailableBed = hospitalArray.filter(
+    //   (hos) => hos.available_bed > 0
+    // )
+
+    const hospitalArray = hospitalDetail.map((hos, idx) => ({
+      name: hos.name,
+      address: hos.address,
       available_bed: Number(bedAvailable[idx]) || 0,
       bed_queue: bedQueue[idx],
       hotline: hotline[idx],
@@ -268,23 +208,12 @@ export default async function getBedAvailability(req, res) {
       hospital_code: bedDetailLink[idx].hospital_code,
       updated_at_minutes: updatedAt[idx],
     }))
-  }
 
-  try {
-    const data = await redis.fetch(`bed:${prov}`, fetcher, 60 * 5, {
-      revalidate: revalidate === 'true',
-    })
-
-    if (data.length === 0) {
-      res.json({ status: 200, data, error: null })
-      return
+    if (hospitalArray.length === 0) {
+      return data
     }
 
-    // const filteredAvailableBed = hospitalArray.filter(
-    //   (hos) => hos.available_bed > 0
-    // )
-
-    const filteredAvailableBedWithLocation = data.map((hos) => {
+    const filteredAvailableBedWithLocation = hospitalArray.map((hos) => {
       const url = `http://yankes.kemkes.go.id/app/siranap/rumah_sakit/${hos.hospital_code}`
       return axios
         .get(url)
@@ -304,6 +233,14 @@ export default async function getBedAvailability(req, res) {
     })
 
     const newArr = await Promise.all(filteredAvailableBedWithLocation)
+
+    return newArr
+  }
+
+  try {
+    const newArr = await redis.fetch(`bed:${prov}`, fetcher, 60 * 5, {
+      revalidate: revalidate === 'true',
+    })
 
     res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate')
 

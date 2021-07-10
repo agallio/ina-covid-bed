@@ -9,7 +9,14 @@
 
 ## Develop
 
-You need the API keys to develop. If you want it, hit me up on Twitter. 
+Change `.env.example` to `.env`
+
+```
+NEXT_PUBLIC_MAPBOX=
+NEXT_REDIS_URL=
+```
+
+Ask [@agalliosamai](https://twitter.com/agalliosamai) for REDIS URL
 
 ```bash
 # install

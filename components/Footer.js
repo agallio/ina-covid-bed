@@ -1,10 +1,12 @@
 import styles from '@/styles/Home.module.css'
-import { Text } from '@chakra-ui/react'
+import { Text, useColorModeValue } from '@chakra-ui/react'
 
 export default function Footer() {
+  const dynamicLinkColor = useColorModeValue('blue.600', 'blue.400')
+
   return (
     <footer className={styles.footer}>
-      <Text color="blue.600" fontSize="sm">
+      <Text color={dynamicLinkColor} fontSize="sm">
         <a
           href="https://github.com/agallio/ina-covid-bed"
           target="_blank"

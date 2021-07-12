@@ -164,13 +164,15 @@ function MapPage(props) {
         <p>Tempat tidur tersedia: ${hospital.available_bed} | Antrian: ${
           hospital.bed_queue
         }</p>
-        <p>Hotline: <a href="${
-          hospital.hotline ? `tel:${hospital.hotline}` : '#'
-        }" target="_blank" rel="noreferrer">${hospital.hotline}</a>
-        | <a href="${
+        ${
+          hospital.hotline
+            ? `<a class="hosp__hotline" href="tel:${hospital.hotline}" target="_blank" rel="noreferrer">${hospital.hotline}</a>`
+            : ``
+        }
+        <p style="margin-top: .5rem">${hospital.address}</p>
+        <a class="hosp__detail" href="${
           hospital.bed_detail_link
-        }" target="_blank" rel="noreferrer">Detail</a></p>
-        <p style="margin-top: .5rem">${hospital.address}</p>`,
+        }" target="_blank" rel="noreferrer">Detail</a>`,
         icon: 'hospital-15',
       },
       geometry: {

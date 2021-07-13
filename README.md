@@ -11,12 +11,7 @@
 
 Change `.env.example` to `.env`
 
-```
-NEXT_PUBLIC_MAPBOX=
-NEXT_REDIS_URL=
-```
-
-Ask [@agalliosamai](https://twitter.com/agalliosamai) for REDIS URL
+Ask [me](https://twitter.com/agalliosamai) for all the supabase env.
 
 ```bash
 # install

@@ -1,6 +1,6 @@
 # ina-covid-bed
 
-[![website preview](/public/readme.png)](https://bed.ina-covid.com)
+[![website preview](https://api.microlink.io/?url=https%3A%2F%2Fbed.ina-covid.com&overlay.browser=dark&screenshot=true&meta=false&embed=screenshot.url)](https://bed.ina-covid.com)
 
 ## Prerequisites
 

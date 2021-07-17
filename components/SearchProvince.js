@@ -60,8 +60,10 @@ function SearchProvince({ onChooseProvince, onSearchGeo, disabled, value }) {
     if (inputValue) {
       setInputFocus(true)
       const filteredProvince = provinceList
-        .filter((province) =>
-          province.name.toLowerCase().includes(inputValue.toLowerCase())
+        .filter(
+          (province) =>
+            province.name.toLowerCase().includes(inputValue.toLowerCase()) ||
+            province.alias.toLowerCase().includes(inputValue.toLowerCase())
         )
         .slice(0, 5)
       setFilterResult(filteredProvince)

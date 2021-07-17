@@ -3,6 +3,7 @@ import { provincesWithCities } from './constants'
 export const provinceList = provincesWithCities.map((row) => ({
   value: row.province.value,
   name: row.province.name,
+  alias: row.province.alias,
 }))
 
 /**

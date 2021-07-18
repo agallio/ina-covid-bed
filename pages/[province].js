@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Link as ChakraLink } from '@chakra-ui/react'
+import { Input, InputGroup, InputLeftElement, Link as ChakraLink } from '@chakra-ui/react'
 import { NextSeo } from 'next-seo'
 import {
   Container,
@@ -18,6 +18,8 @@ import { getProvinceDisplayName } from '@/utils/ProvinceHelper'
 import { getNearestProvinces } from '@/utils/LocationHelper'
 import HospitalCard from '@/components/HospitalCard'
 import SEO from 'next-seo.config'
+import debounce from 'lodash.debounce'
+import { SearchIcon } from '@chakra-ui/icons'
 
 function ProvincePage(props) {
   const { province } = props
@@ -25,6 +27,15 @@ function ProvincePage(props) {
   const geo = props.geo ? { lat, lon } : null
   const { bedFull, hospitalList } = useHospitalDataByProvince(province, geo)
   const isShowAlternativeProvince = !!geo
+  const [hospitals, setHospitals] = useState([])
+
+  useEffect(() => {
+    setHospitals(hospitalList || [])
+  }, [ hospitalList ])
+
+  const handleSearchChange = debounce(e => {
+    setHospitals(hospitalList.filter(hospital => hospital.name.indexOf(e.target.value) !== -1))
+  }, 750)
 
   let alternativeProvinces
   if (isShowAlternativeProvince) {
@@ -69,6 +80,19 @@ function ProvincePage(props) {
           <Heading m="4" textAlign="center">
             {getProvinceDisplayName(province)}
           </Heading>
+          <br/>
+          <InputGroup>
+            <InputLeftElement
+              pointerEvents="none"
+              // eslint-disable-next-line react/no-children-prop
+              children={<SearchIcon color="gray.300" />}
+            />
+            <Input
+              fontSize="lg"
+              onChange={handleSearchChange}
+              placeholder="Cari berdasarkan nama RS"
+            />
+          </InputGroup>
           {isShowAlternativeProvince && (
             <HStack
               fontSize={['xs', 'sm']}
@@ -93,7 +117,7 @@ function ProvincePage(props) {
         </VStack>
         <VStack align="start" spacing="4">
           {!isLoading ? (
-            hospitalList.map((hospital, idx) => (
+            hospitals.map((hospital, idx) => (
               <HospitalCard key={idx} hospital={hospital} />
             ))
           ) : (

@@ -9,8 +9,9 @@ import {
   Button,
   HStack,
   useColorModeValue,
+  IconButton,
 } from '@chakra-ui/react'
-import { SearchIcon } from '@chakra-ui/icons'
+import { SearchIcon, ArrowBackIcon } from '@chakra-ui/icons'
 
 import { provinceList } from '@/utils/ProvinceHelper'
 
@@ -39,7 +40,13 @@ function ProvinceItem(props) {
   )
 }
 
-function SearchProvince({ onChooseProvince, onSearchGeo, disabled, value }) {
+function SearchProvince({
+  onChooseProvince,
+  onSearchGeo,
+  disabled,
+  value,
+  backButton,
+}) {
   const [inputFocus, setInputFocus] = useState(false)
   const [inputProvince, setInputProvince] = useState('')
   const [filterResult, setFilterResult] = useState([])
@@ -83,6 +90,15 @@ function SearchProvince({ onChooseProvince, onSearchGeo, disabled, value }) {
   return (
     <Box onBlur={() => setTimeout(() => setInputFocus(false), 100)}>
       <HStack spacing="2">
+        <Button
+          colorScheme="gray"
+          color="gray.600"
+          style={{ display: backButton === true ? 'block' : 'none' }}
+          aria-label="Back to homepage"
+          onClick={() => (window.location.href = '/')}
+        >
+          {<ArrowBackIcon w={5} h={5} m={-1} />}
+        </Button>
         <InputGroup onFocus={() => setInputFocus(true)}>
           <InputLeftElement
             pointerEvents="none"

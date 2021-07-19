@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Input, InputGroup, InputLeftElement, Link as ChakraLink } from '@chakra-ui/react'
+import {
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Link as ChakraLink,
+} from '@chakra-ui/react'
 import { NextSeo } from 'next-seo'
 import {
   Container,
@@ -31,10 +36,14 @@ function ProvincePage(props) {
 
   useEffect(() => {
     setHospitals(hospitalList || [])
-  }, [ hospitalList ])
+  }, [hospitalList])
 
-  const handleSearchChange = debounce(e => {
-    setHospitals(hospitalList.filter(hospital => hospital.name.indexOf(e.target.value) !== -1))
+  const handleSearchChange = debounce((e) => {
+    setHospitals(
+      hospitalList.filter(
+        (hospital) => hospital.name.indexOf(e.target.value) !== -1
+      )
+    )
   }, 750)
 
   let alternativeProvinces
@@ -80,7 +89,7 @@ function ProvincePage(props) {
           <Heading m="4" textAlign="center">
             {getProvinceDisplayName(province)}
           </Heading>
-          <br/>
+          <br />
           <InputGroup>
             <InputLeftElement
               pointerEvents="none"

@@ -242,7 +242,7 @@ function MapPage(props) {
   }
 
   return (
-    <Box position="relative" color="black">
+    <Box position="relative">
       <NextSeo
         {...SEO({
           pageTitle: `${province.label} - Peta Ketersediaan Tempat Tidur`,
@@ -283,6 +283,7 @@ function MapPage(props) {
             onSearchGeo={handleSearchGeo}
             disabled={isLoading}
             value={province.label}
+            backButton={true}
           />
 
           {Boolean(alternativeProvinces.length) && (

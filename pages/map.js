@@ -283,6 +283,7 @@ function MapPage(props) {
             onSearchGeo={handleSearchGeo}
             disabled={isLoading}
             value={province.label}
+            backButton={true}
           />
 
           {Boolean(alternativeProvinces.length) && (

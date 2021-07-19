@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import {
   Box,
   Input,
@@ -10,7 +11,7 @@ import {
   HStack,
   useColorModeValue,
 } from '@chakra-ui/react'
-import { SearchIcon } from '@chakra-ui/icons'
+import { SearchIcon, ArrowBackIcon } from '@chakra-ui/icons'
 
 import { provinceList } from '@/utils/ProvinceHelper'
 
@@ -39,10 +40,17 @@ function ProvinceItem(props) {
   )
 }
 
-function SearchProvince({ onChooseProvince, onSearchGeo, disabled, value }) {
+function SearchProvince({
+  onChooseProvince,
+  onSearchGeo,
+  disabled,
+  value,
+  backButton,
+}) {
   const [inputFocus, setInputFocus] = useState(false)
   const [inputProvince, setInputProvince] = useState('')
   const [filterResult, setFilterResult] = useState([])
+  const router = useRouter()
 
   const dynamicInputColor = useColorModeValue('gray.900', 'white')
   const dynamicPlaceholderColor = useColorModeValue('gray.500', 'gray.400')
@@ -80,9 +88,24 @@ function SearchProvince({ onChooseProvince, onSearchGeo, disabled, value }) {
     }
   }, [value])
 
+  const handleBackButton = (e) => {
+    e.preventDefault()
+    router.push('/')
+  }
+
   return (
     <Box onBlur={() => setTimeout(() => setInputFocus(false), 100)}>
       <HStack spacing="2">
+        {backButton && (
+          <Button
+            onClick={handleBackButton}
+            colorScheme="gray"
+            color="gray.600"
+            aria-label="Back to homepage"
+          >
+            <ArrowBackIcon />
+          </Button>
+        )}
         <InputGroup onFocus={() => setInputFocus(true)}>
           <InputLeftElement
             pointerEvents="none"

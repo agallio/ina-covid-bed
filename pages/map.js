@@ -242,7 +242,7 @@ function MapPage(props) {
   }
 
   return (
-    <Box position="relative" color="black">
+    <Box position="relative">
       <NextSeo
         {...SEO({
           pageTitle: `${province.label} - Peta Ketersediaan Tempat Tidur`,

@@ -8,6 +8,7 @@ import {
   InputGroup,
   InputLeftElement,
   Button,
+  IconButton,
   HStack,
   useColorModeValue,
 } from '@chakra-ui/react'
@@ -97,14 +98,13 @@ function SearchProvince({
     <Box onBlur={() => setTimeout(() => setInputFocus(false), 100)}>
       <HStack spacing="2">
         {backButton && (
-          <Button
+          <IconButton
+            borderRadius="md"
             onClick={handleBackButton}
+            aria-label="back to homepage"
             colorScheme="gray"
-            color="gray.600"
-            aria-label="Back to homepage"
-          >
-            <ArrowBackIcon />
-          </Button>
+            icon={<ArrowBackIcon />}
+          />
         )}
         <InputGroup onFocus={() => setInputFocus(true)}>
           <InputLeftElement

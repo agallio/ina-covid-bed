@@ -33,19 +33,32 @@ function ProvincePage(props) {
   const { bedFull, hospitalList } = useHospitalDataByProvince(province, geo)
   const isShowAlternativeProvince = !!geo
   const [hospitals, setHospitals] = useState([])
+  const [searchValue, setSearchValue] = useState('')
+
+  const refreshHospitals = () => {
+    setHospitals(hospitalList || [])
+  }
 
   useEffect(() => {
-    setHospitals(hospitalList || [])
+    refreshHospitals()
   }, [hospitalList])
 
-  const handleSearchChange = debounce((e) => {
-    setHospitals(
-      hospitalList.filter(
-        (hospital) =>
-          hospital.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !==
-          -1
+  useEffect(() => {
+    if (searchValue) {
+      setHospitals(
+        hospitalList.filter(
+          (hospital) =>
+            hospital.name.toLowerCase().indexOf(searchValue.toLowerCase()) !==
+            -1
+        )
       )
-    )
+      return
+    }
+    refreshHospitals()
+  }, [searchValue])
+
+  const handleSearchChange = debounce((e) => {
+    setSearchValue(e.target.value)
   }, 750)
 
   let alternativeProvinces
@@ -140,6 +153,12 @@ function ProvincePage(props) {
           {!bedFull && hospitalList && hospitalList.length < 1 && (
             <Text textAlign="center" w="100%" p="24" color="gray.600">
               Tidak ditemukan data rumah sakit di provinsi ini
+            </Text>
+          )}
+          {searchValue.length > 1 && hospitals && hospitals.length < 1 && (
+            <Text textAlign="center" w="100%" p="24" color="gray.600">
+              Pencarian rumah sakit dengan keyword "{searchValue}" tidak
+              ditemukan.
             </Text>
           )}
           {bedFull && (

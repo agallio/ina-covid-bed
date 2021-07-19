@@ -41,7 +41,9 @@ function ProvincePage(props) {
   const handleSearchChange = debounce((e) => {
     setHospitals(
       hospitalList.filter(
-        (hospital) => hospital.name.indexOf(e.target.value) !== -1
+        (hospital) =>
+          hospital.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !==
+          -1
       )
     )
   }, 750)

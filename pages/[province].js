@@ -157,8 +157,8 @@ function ProvincePage(props) {
           )}
           {searchValue.length > 1 && hospitals && hospitals.length < 1 && (
             <Text textAlign="center" w="100%" p="24" color="gray.600">
-              Pencarian rumah sakit dengan keyword "{searchValue}" tidak
-              ditemukan.
+              Pencarian rumah sakit dengan keyword &quot;{searchValue}&quot;
+              tidak ditemukan.
             </Text>
           )}
           {bedFull && (

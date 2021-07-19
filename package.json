@@ -11,7 +11,7 @@
     "postinstall": "husky install"
   },
   "engines": {
-    "node": "14.x.x",
+    "node": "15.x.x",
     "npm": "please-use-pnpm"
   },
   "dependencies": {

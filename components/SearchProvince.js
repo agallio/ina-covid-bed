@@ -1,4 +1,6 @@
+/* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import {
   Box,
   Input,
@@ -50,6 +52,7 @@ function SearchProvince({
   const [inputFocus, setInputFocus] = useState(false)
   const [inputProvince, setInputProvince] = useState('')
   const [filterResult, setFilterResult] = useState([])
+  const router = useRouter()
 
   const dynamicInputColor = useColorModeValue('gray.900', 'white')
   const dynamicPlaceholderColor = useColorModeValue('gray.500', 'gray.400')
@@ -90,15 +93,17 @@ function SearchProvince({
   return (
     <Box onBlur={() => setTimeout(() => setInputFocus(false), 100)}>
       <HStack spacing="2">
-        <Button
-          colorScheme="gray"
-          color="gray.600"
-          style={{ display: backButton === true ? 'block' : 'none' }}
-          aria-label="Back to homepage"
-          onClick={() => (window.location.href = '/')}
-        >
-          {<ArrowBackIcon w={5} h={5} m={-1} />}
-        </Button>
+        {backButton && (
+          <Button
+            onClick={() => router.push('/')}
+            colorScheme="gray"
+            color="gray.600"
+            aria-label="Back to homepage"
+          >
+            {<ArrowBackIcon w={5} h={5} m={-1} />}
+          </Button>
+        )}
+
         <InputGroup onFocus={() => setInputFocus(true)}>
           <InputLeftElement
             pointerEvents="none"

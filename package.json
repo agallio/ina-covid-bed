@@ -24,6 +24,7 @@
     "cheerio": "^1.0.0-rc.10",
     "framer-motion": "^4",
     "isomorphic-unfetch": "^3.1.0",
+    "lodash.debounce": "^4.0.8",
     "mapbox-gl": "^2.3.1",
     "next": "11.0.1",
     "next-seo": "^4.26.0",

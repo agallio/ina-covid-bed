@@ -1,6 +1,11 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Link as ChakraLink } from '@chakra-ui/react'
+import {
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Link as ChakraLink,
+} from '@chakra-ui/react'
 import { NextSeo } from 'next-seo'
 import {
   Container,
@@ -18,6 +23,8 @@ import { getProvinceDisplayName } from '@/utils/ProvinceHelper'
 import { getNearestProvinces } from '@/utils/LocationHelper'
 import HospitalCard from '@/components/HospitalCard'
 import SEO from 'next-seo.config'
+import debounce from 'lodash.debounce'
+import { SearchIcon } from '@chakra-ui/icons'
 
 function ProvincePage(props) {
   const { province } = props
@@ -25,6 +32,34 @@ function ProvincePage(props) {
   const geo = props.geo ? { lat, lon } : null
   const { bedFull, hospitalList } = useHospitalDataByProvince(province, geo)
   const isShowAlternativeProvince = !!geo
+  const [hospitals, setHospitals] = useState([])
+  const [searchValue, setSearchValue] = useState('')
+
+  const refreshHospitals = () => {
+    setHospitals(hospitalList || [])
+  }
+
+  useEffect(() => {
+    refreshHospitals()
+  }, [hospitalList])
+
+  useEffect(() => {
+    if (searchValue) {
+      setHospitals(
+        hospitalList.filter(
+          (hospital) =>
+            hospital.name.toLowerCase().indexOf(searchValue.toLowerCase()) !==
+            -1
+        )
+      )
+      return
+    }
+    refreshHospitals()
+  }, [searchValue])
+
+  const handleSearchChange = debounce((e) => {
+    setSearchValue(e.target.value)
+  }, 750)
 
   let alternativeProvinces
   if (isShowAlternativeProvince) {
@@ -69,6 +104,19 @@ function ProvincePage(props) {
           <Heading m="4" textAlign="center">
             {getProvinceDisplayName(province)}
           </Heading>
+          <br />
+          <InputGroup>
+            <InputLeftElement
+              pointerEvents="none"
+              // eslint-disable-next-line react/no-children-prop
+              children={<SearchIcon color="gray.300" />}
+            />
+            <Input
+              fontSize="lg"
+              onChange={handleSearchChange}
+              placeholder="Cari berdasarkan nama RS"
+            />
+          </InputGroup>
           {isShowAlternativeProvince && (
             <HStack
               fontSize={['xs', 'sm']}
@@ -93,7 +141,7 @@ function ProvincePage(props) {
         </VStack>
         <VStack align="start" spacing="4">
           {!isLoading ? (
-            hospitalList.map((hospital, idx) => (
+            hospitals.map((hospital, idx) => (
               <HospitalCard key={idx} hospital={hospital} />
             ))
           ) : (
@@ -105,6 +153,11 @@ function ProvincePage(props) {
           {!bedFull && hospitalList && hospitalList.length < 1 && (
             <Text textAlign="center" w="100%" p="24" color="gray.600">
               Tidak ditemukan data rumah sakit di provinsi ini
+            </Text>
+          )}
+          {searchValue.length > 1 && hospitals && hospitals.length < 1 && (
+            <Text textAlign="center" w="100%" p="24" color="gray.600">
+              {`Pencarian rumah sakit dengan keyword "${searchValue}" tidak ditemukan.`}
             </Text>
           )}
           {bedFull && (

@@ -15,6 +15,7 @@ specifiers:
   framer-motion: ^4
   husky: ^7.0.1
   isomorphic-unfetch: ^3.1.0
+  lodash.debounce: ^4.0.8
   mapbox-gl: ^2.3.1
   next: 11.0.1
   next-seo: ^4.26.0
@@ -35,6 +36,7 @@ dependencies:
   cheerio: 1.0.0-rc.10
   framer-motion: 4.1.17_react-dom@17.0.2+react@17.0.2
   isomorphic-unfetch: 3.1.0
+  lodash.debounce: 4.0.8
   mapbox-gl: 2.3.1
   next: 11.0.1_react-dom@17.0.2+react@17.0.2
   next-seo: 4.26.0_de3a444b12c9ebc463b1db22b5bac6fe
@@ -3268,6 +3270,10 @@ packages:
   /lodash.clonedeep/4.5.0:
     resolution: {integrity: sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=}
     dev: true
+
+  /lodash.debounce/4.0.8:
+    resolution: {integrity: sha1-gteb/zCmfEAF/9XiUVMArZyk168=}
+    dev: false
 
   /lodash.merge/4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}

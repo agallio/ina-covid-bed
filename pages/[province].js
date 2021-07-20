@@ -34,6 +34,7 @@ function ProvincePage(props) {
   const isShowAlternativeProvince = !!geo
   const [hospitals, setHospitals] = useState([])
   const [searchValue, setSearchValue] = useState('')
+  const [seconds, setSeconds] = useState(0)
 
   const refreshHospitals = () => {
     setHospitals(hospitalList || [])
@@ -71,6 +72,18 @@ function ProvincePage(props) {
   const dynamicLinkColor = useColorModeValue('blue.600', 'blue.400')
 
   const isLoading = !Boolean(hospitalList)
+
+  useEffect(() => {
+    let timer
+    if (isLoading) {
+      timer = setTimeout(() => {
+        setSeconds((seconds) => seconds + 1)
+      }, 1000)
+    } else if (!isLoading && seconds !== 0) {
+      clearTimeout(timer)
+    }
+    return () => clearTimeout(timer)
+  }, [isLoading, seconds])
 
   return (
     <>
@@ -147,6 +160,12 @@ function ProvincePage(props) {
           ) : (
             <Box w="100%" textAlign="center">
               <Spinner size="lg" />
+              {seconds > 10 && (
+                <Text p={4} mt={4}>
+                  Pengambilan data Provinsi {getProvinceDisplayName(province)}{' '}
+                  membutuhkan waktu lebih lama. Mohon tunggu.{' '}
+                </Text>
+              )}
             </Box>
           )}
 

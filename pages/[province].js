@@ -151,9 +151,10 @@ function ProvincePage(props) {
             <Box w="100%" textAlign="center">
               <Spinner size="lg" />
               {slowLoading && (
-                <Text p={4} mt={4}>
-                  Pengambilan data Provinsi {getProvinceDisplayName(province)}{' '}
-                  membutuhkan waktu lebih lama. Mohon tunggu.{' '}
+                <Text px={2} py={4} mt={4}>
+                  Pengambilan data provinsi &quot;
+                  {getProvinceDisplayName(province)}&quot; membutuhkan waktu
+                  yang lebih lama. Mohon tunggu sesaat.{' '}
                 </Text>
               )}
             </Box>

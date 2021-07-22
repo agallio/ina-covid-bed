@@ -30,7 +30,10 @@ function ProvincePage(props) {
   const { province } = props
   const [lat, lon] = (props.geo ?? '').split(',')
   const geo = props.geo ? { lat, lon } : null
-  const { bedFull, hospitalList } = useHospitalDataByProvince(province, geo)
+  const { bedFull, hospitalList, slowLoading } = useHospitalDataByProvince(
+    province,
+    geo
+  )
   const isShowAlternativeProvince = !!geo
   const [hospitals, setHospitals] = useState([])
   const [searchValue, setSearchValue] = useState('')
@@ -147,6 +150,13 @@ function ProvincePage(props) {
           ) : (
             <Box w="100%" textAlign="center">
               <Spinner size="lg" />
+              {slowLoading && (
+                <Text px={2} py={4} mt={4}>
+                  Pengambilan data provinsi &quot;
+                  {getProvinceDisplayName(province)}&quot; membutuhkan waktu
+                  yang lebih lama. Mohon tunggu sesaat.{' '}
+                </Text>
+              )}
             </Box>
           )}
 

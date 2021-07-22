@@ -1,13 +1,26 @@
 import useSWR from 'swr'
+import { useState } from 'react'
 
 import { getDistanceFromLatLonInKm } from '@/utils/LocationHelper'
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json())
 
 export default function useHospitalDataByProvince(province, geo) {
+  const [slowLoading, setSlowLoading] = useState(false)
   const { data: apiResult } = useSWR(
     `/api/bed?prov=${province}&revalidate=false`,
-    fetcher
+    fetcher,
+    {
+      loadingTimeout: 10000,
+      onLoadingSlow: () => {
+        setSlowLoading(true)
+        return
+      },
+      onSuccess: () => {
+        setSlowLoading(false)
+        return
+      },
+    }
   )
   let hospitalList = null
   let bedFull = false
@@ -53,7 +66,8 @@ export default function useHospitalDataByProvince(province, geo) {
           return a.distance > b.distance ? 1 : -1
         })
     }
+    // setSlowLoading(false)
   }
 
-  return { bedFull, hospitalList }
+  return { bedFull, hospitalList, slowLoading }
 }

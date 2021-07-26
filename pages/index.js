@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Container, Flex } from '@chakra-ui/react'
 import SearchProvince from '@/components/SearchProvince'
 import { VStack, Box, Heading, Button } from '@chakra-ui/react'
@@ -8,6 +8,7 @@ import { getNearestProvince } from '@/utils/LocationHelper'
 export default function Home() {
   const router = useRouter()
   const [isSearchingGeo, setSearchingGeo] = useState(false)
+  const [wrapperHeight, setWrapperHeight] = useState('90vh')
 
   function toMapPage() {
     router.push('/map')
@@ -40,9 +41,13 @@ export default function Home() {
     )
   }
 
+  useEffect(() => {
+    setWrapperHeight(window.innerHeight * 0.9)
+  }, [])
+
   return (
     <Container>
-      <Flex h="90vh" justify="center" align="center">
+      <Flex h={wrapperHeight} justify="center" align="center">
         <VStack w="100%" spacing="8">
           <Heading as="h1" fontSize="3xl" textAlign="center">
             Ketersediaan Tempat Tidur Rumah Sakit

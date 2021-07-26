@@ -102,12 +102,12 @@ function ProvincePage(props) {
             <ChakraLink>‹ Ganti Provinsi</ChakraLink>
           </Link>
         </Text>
-        <VStack spacing="1" my="12">
+        <VStack spacing="4" my="12">
           <Text>Ketersediaan tempat tidur rumah sakit</Text>
           <Heading m="4" textAlign="center">
             {getProvinceDisplayName(province)}
           </Heading>
-          <br />
+
           <InputGroup>
             <InputLeftElement
               pointerEvents="none"

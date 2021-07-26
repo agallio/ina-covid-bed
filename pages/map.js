@@ -38,6 +38,7 @@ function MapPage(props) {
   })
   const [popupHospital, setPopupHospitalVisibility] = useState(false)
   const [_, setSearchingGeo] = useState(false)
+  const [mapWrapperHeight, setMapWrapperHeight] = useState(0)
 
   const [urlLat, urlLon] = (props.geo ?? '').split(',')
   const geo = props.geo ? { lat: urlLat, lon: urlLon } : null
@@ -70,6 +71,10 @@ function MapPage(props) {
   useEffect(() => {
     updateMap()
   }, [hospitalList])
+
+  useEffect(() => {
+    setMapWrapperHeight(window.innerHeight - 70)
+  }, [])
 
   const handleChooseProvince = (province, type = 'auto') => {
     setProvince({ value: province.value, label: province.name })
@@ -263,7 +268,7 @@ function MapPage(props) {
       <Box
         position="relative"
         width="100vw"
-        height="calc(100vh - 70px)"
+        height={mapWrapperHeight}
         overflow="hidden"
       >
         <Box ref={mapContainer} height="100%" width="100%" />

@@ -4,6 +4,9 @@ import { parseUrl } from 'query-string'
 
 import { provincesWithCities } from '@/utils/constants'
 import { supabase } from '@/utils/supabase'
+import rateLimit from '@/utils/RateLimit'
+
+const limiter = rateLimit()
 
 export default async function getBedAvailability(req, res) {
   if (req.method !== 'GET') {
@@ -250,6 +253,12 @@ export default async function getBedAvailability(req, res) {
       error_detail: error,
     })
     return
+  }
+
+  try {
+    await limiter.check(res, 60, 'API_RATE_LIMIT')
+  } catch (e) {
+    return res.status(429).json({ data: null, error: 'Rate limit exceeded.' })
   }
 
   if (data.length === 0) {

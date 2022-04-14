@@ -3,7 +3,6 @@ import cheerio from 'cheerio'
 import { parseUrl } from 'query-string'
 
 import { provincesWithCities } from '@/utils/constants'
-import { supabase } from '@/utils/supabase'
 import rateLimit from '@/utils/RateLimit'
 
 const limiter = rateLimit()
@@ -240,82 +239,10 @@ export default async function getBedAvailability(req, res) {
     return newArr
   }
 
-  const { data, error } = await supabase
-    .from('bed_cache')
-    .select()
-    .eq('key', prov)
-
-  if (error) {
-    res.status(500).json({
-      status: 500,
-      data: null,
-      error: 'Supabase read error.',
-      error_detail: error,
-    })
-    return
-  }
-
   try {
     await limiter.check(res, 60, 'API_RATE_LIMIT')
   } catch (e) {
     return res.status(429).json({ data: null, error: 'Rate limit exceeded.' })
-  }
-
-  if (data.length === 0) {
-    try {
-      const newArr = await fetcher()
-
-      res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate')
-
-      if (newArr.length === 0) {
-        res.json({ status: 200, data: newArr, error: null, full_bed: true })
-        return
-      }
-
-      const { error } = await supabase.from('bed_cache').insert([
-        {
-          key: prov,
-          data: newArr,
-          date: new Date().toISOString(),
-        },
-      ])
-
-      if (error) {
-        res.status(500).json({
-          status: 500,
-          data: null,
-          error: 'Supabase insert error.',
-          error_detail: error,
-        })
-        return
-      }
-
-      res.json({ status: 200, data: newArr, error: null })
-      return
-    } catch (e) {
-      console.log(e)
-      res
-        .status(500)
-        .json({ status: 500, data: null, error: 'Internal server error.' })
-      return
-    }
-  }
-
-  const timeDiffs = Math.abs(new Date() - new Date(data[0].date))
-  const timeDiffsInMinute = Math.floor(timeDiffs / 1000 / 60)
-
-  if (timeDiffsInMinute <= 10) {
-    const newArr = data[0].data
-
-    res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate')
-
-    if (newArr.length === 0) {
-      res.json({ status: 200, data: newArr, error: null, full_bed: true })
-      return
-    }
-
-    res.json({ status: 200, data: newArr, error: null })
-    return
   }
 
   try {
@@ -328,26 +255,13 @@ export default async function getBedAvailability(req, res) {
       return
     }
 
-    const { error } = await supabase
-      .from('bed_cache')
-      .update({ data: newArr, date: new Date().toISOString() })
-      .eq('key', prov)
-
-    if (error) {
-      res.status(500).json({
-        status: 500,
-        data: null,
-        error: 'Supabase update error.',
-        error_detail: error,
-      })
-      return
-    }
-
-    return res.json({ status: 200, data: newArr, error: null })
+    res.json({ status: 200, data: newArr, error: null })
+    return
   } catch (e) {
     console.log(e)
-    return res
+    res
       .status(500)
       .json({ status: 500, data: null, error: 'Internal server error.' })
+    return
   }
 }

@@ -4,14 +4,14 @@
 
 ## Prerequisites
 
-- Node > v14
+- Node = v14
 - pnpm
 
 ## Develop
 
 Change `.env.example` to `.env`
 
-Ask [me](https://twitter.com/agalliosamai) for all the supabase env.
+Ask [me](https://twitter.com/agalliosamai) for the env.
 
 ```bash
 # install

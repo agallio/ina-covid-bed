@@ -19,7 +19,6 @@
     "@chakra-ui/react": "^1.6.4",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
-    "@supabase/supabase-js": "^1.18.1",
     "axios": "^0.21.1",
     "cheerio": "^1.0.0-rc.10",
     "framer-motion": "^4",
